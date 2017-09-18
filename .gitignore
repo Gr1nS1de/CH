@@ -1,0 +1,36 @@
+# =============== #
+# Unity generated #
+# =============== #
+_color_hit/Temp/
+_color_hit/obj/
+_color_hit/UnityGenerated/
+_color_hit/Library/
+_color_hit/Assets/AssetStoreTools*
+Reference/
+Apk/
+
+# ===================================== #
+# Visual Studio / MonoDevelop generated #
+# ===================================== #
+ExportedObj/
+*.svd
+*.userprefs
+*.csproj
+*.pidb
+*.suo
+*.sln
+*.user
+*.unityproj
+*.booproj
+
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
