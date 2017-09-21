@@ -20,13 +20,15 @@ public static class Utils
 		return number.ToString("N0", new NumberFormatInfo { NumberGroupSeparator = " " });
 	}
 
-	public static void RebuildLayoutGroups(RectTransform element)
+	public static IEnumerator RebuildLayoutGroups(RectTransform element)
 	{
 		if (element == null)
 		{
 			Debug.LogError ("Trying to rebuild layout for null element!");
-			return;
+			yield break;
 		}
+
+		yield return new WaitForEndOfFrame ();
 
 		List<LayoutGroup> layoutsList = new List<LayoutGroup>(element.GetComponentsInChildren<LayoutGroup> (true));
 
@@ -37,5 +39,10 @@ public static class Utils
 				LayoutRebuilder.ForceRebuildLayoutImmediate (layout.GetComponent<RectTransform> ());
 			});
 		}
+	}
+
+	public static ObstacleModel.ObstacleType GetObstacleTypeByCollider(Collider2D collider)
+	{
+		return (ObstacleModel.ObstacleType)System.Enum.Parse (typeof(ObstacleModel.ObstacleType), LayerMask.LayerToName( collider.gameObject.layer));
 	}
 }

@@ -3,7 +3,7 @@ using System.Collections;
 
 public abstract class Controller : Element
 {
-	virtual public void OnNotification( string alias, Object target, params object[] data ) { }
+	public virtual void OnNotification( string alias, Object target, params object[] data ) { }
 
 	public GameApplication game 	{ get { return (GameApplication)m_Game; } }
 	public MenuApplication ui			{ get { return (MenuApplication)m_UI; } }

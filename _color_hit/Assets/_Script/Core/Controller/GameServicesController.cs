@@ -16,7 +16,7 @@ public class GameServicesController : Controller
 					break;
 				}
 
-			case N.OnPlayerNewRecord_:
+			case N.PlayerNewRecord_:
 				{
 					int score = (int)data [0];
 

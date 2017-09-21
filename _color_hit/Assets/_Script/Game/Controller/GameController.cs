@@ -50,116 +50,38 @@ public class GameController : Controller
 				{
 					OnStart();
 
-					SetGameState( GameState.MainMenu );
 					break;
 				}
 
-			case N.GameStart:
+			case N.LineImpactObstacle__:
 				{
-					OnGameStartPlay ();
+					ObstacleModel.ObstacleType obstacleType = (ObstacleModel.ObstacleType)data [0];
+					Vector3 currentPosition = (Vector3)data [1];
 
-					break;
-				}
+					Debug.LogFormat ("Line impact {0} at {1}", obstacleType, currentPosition);
 
-			case N.GamePlay:
-				{
-					SetGameState (GameState.Playing);
-					break;
-				}
-					
+					switch (obstacleType)
+					{
+						case ObstacleModel.ObstacleType.Die:
+							{
+								Notify (N.GameOver_);
+								break;
+							}
 
-			case N.OnPlayerInvisible:
-				{
-					GameOver ();
-					break;
-				}
-
-			case N.GamePause:
-				{
-					SetGameState(GameState.Pause);
-					break;
-				}
-
-			case N.GameAddScore:
-				{
-					//_gameModel.gameOverData.ScoreCount++;
-					break;
-				}
-
-			case N.GameContinue:
-				{
-					SetGameState( GameState.Playing);
+						case ObstacleModel.ObstacleType.Point:
+							{
+								break;
+							}
+					}
 					break;
 				}
 					
 		}
 	}
-
-	#region public methods
-	public void SetGameTheme()//GameTheme gameTheme)
-	{
-		//_gameModel.gameTheme = gameTheme;
-
-		//Notify (N.GameThemeChanged_, NotifyType.GAME, gameTheme);
-	}
-	#endregion
-
+		
 	private void OnStart()
 	{
 
 	}
 
-	private void OnGameStartPlay()
-	{
-
-		//m_PointText.text = _pointScore.ToString();
 	}
-
-	private void SetGameState(GameState gameState)
-	{
-		Debug.LogFormat ("GameState = {0}", gameState); 
-
-		//_gameModel.gameState = gameState;
-	}
-
-		
-
-	private void GameOver()
-	{
-
-		SetGameState( GameState.GameOver);
-
-		Notify (N.GameOver_, NotifyType.ALL);//, new GameOverData (_gameModel.gameOverData));
-
-		//ReportScoreToLeaderboard(point);
-
-		//_player.DesactivateTouchControl();
-
-		//DOTween.KillAll();
-		//StopAllCoroutines();
-
-		//Utils.SetLastScore(_gameModel.currentScore);
-
-		//playerModel.particleTrace.Stop ();
-
-		//ShowAds();
-
-		//_soundManager.PlayFail();
-
-		//ui.controller.OnGameOver(() =>
-		//{
-			//ReloadScene();
-		//});
-	}
-		
-
-	private void ReloadScene()
-	{
-
-		#if UNITY_5_3_OR_NEWER
-		SceneManager.LoadSceneAsync( 0, LoadSceneMode.Single );
-		#else
-		Application.LoadLevel(Application.loadedLevel);
-		#endif
-	}
-}

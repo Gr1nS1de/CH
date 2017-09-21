@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BallModel : Model
+public class LineModel : Model
 {
-	//public 
+
 
 }
 
