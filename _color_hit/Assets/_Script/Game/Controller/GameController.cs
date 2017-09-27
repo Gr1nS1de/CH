@@ -53,22 +53,23 @@ public class GameController : Controller
 					break;
 				}
 
-			case N.LineImpactObstacle__:
+			case N.LineImpactObstacle___:
 				{
-					ObstacleModel.ObstacleType obstacleType = (ObstacleModel.ObstacleType)data [0];
+					ObstacleModel.ObstacleCollisionType collisionType = (ObstacleModel.ObstacleCollisionType)data [0];
 					Vector3 currentPosition = (Vector3)data [1];
+					ObstacleView obstacleView = (ObstacleView)data [2];
 
-					Debug.LogFormat ("Line impact {0} at {1}", obstacleType, currentPosition);
+					Debug.LogFormat ("Line impact {0} at {1}", collisionType, currentPosition);
 
-					switch (obstacleType)
+					switch (collisionType)
 					{
-						case ObstacleModel.ObstacleType.Die:
+						case ObstacleModel.ObstacleCollisionType.Die:
 							{
 								Notify (N.GameOver_);
 								break;
 							}
 
-						case ObstacleModel.ObstacleType.Point:
+						case ObstacleModel.ObstacleCollisionType.Point:
 							{
 								break;
 							}

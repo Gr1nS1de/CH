@@ -41,8 +41,8 @@ public static class Utils
 		}
 	}
 
-	public static ObstacleModel.ObstacleType GetObstacleTypeByCollider(Collider2D collider)
+	public static ObstacleModel.ObstacleCollisionType GetObstacleCollisionType(int layer)
 	{
-		return (ObstacleModel.ObstacleType)System.Enum.Parse (typeof(ObstacleModel.ObstacleType), LayerMask.LayerToName( collider.gameObject.layer));
+		return (ObstacleModel.ObstacleCollisionType)System.Enum.Parse (typeof(ObstacleModel.ObstacleCollisionType), LayerMask.LayerToName( layer));
 	}
 }

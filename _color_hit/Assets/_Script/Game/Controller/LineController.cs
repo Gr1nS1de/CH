@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class LineController : Controller 
 {
-	private LineView _lineView	{ get { return game.view.lineView;}	}
+	private LineModel 	_lineModel	{ get { return game.model.lineModel;}	}
+	private LineView 	_lineView	{ get { return game.view.lineView;}	}
 
 	public override void OnNotification (string alias, Object target, params object[] data)
 	{
@@ -12,7 +13,7 @@ public class LineController : Controller
 		{
 			case N.OnStart:
 				{
-					OnStart ();
+					
 					break;
 				}
 
@@ -28,37 +29,50 @@ public class LineController : Controller
 						case ContinuousGesturePhase.Started:
 							{
 								_lineView.StartDraw();
+								_lineModel.StartDraw ();
 								break;
 							}
 
 						case ContinuousGesturePhase.Updated:
 							{
-								_lineView.DrawPoint (currentPosition, true);
+								if(deltaPosition.magnitude > 0f)
+									_lineView.DrawPoint (currentPosition, true);
 								break;
 							}
 
 						case ContinuousGesturePhase.Ended:
 							{
 								_lineView.FinishDraw ();
+								_lineModel.FinishDraw ();
 								break;
 							}
 					}
 					break;
 				}
 
-			case N.LineImpactObstacle__:
+			case N.LineImpactObstacle___:
 				{
-					ObstacleModel.ObstacleType obstacleType = (ObstacleModel.ObstacleType)data [0];
+					ObstacleModel.ObstacleCollisionType collisionType = (ObstacleModel.ObstacleCollisionType)data [0];
 					Vector3 currentPosition = (Vector3)data [1];
+					ObstacleView obstacleView = (ObstacleView)data [2];
 
+					switch (collisionType)
+					{
+						case ObstacleModel.ObstacleCollisionType.Die:
+							{
+								
+								break;
+							}
+
+						case ObstacleModel.ObstacleCollisionType.Point:
+							{
+								
+								break;
+							}
+					}
 					break;
 				}
 		}
-	}
-
-	private void OnStart()
-	{
-		
 	}
 
 

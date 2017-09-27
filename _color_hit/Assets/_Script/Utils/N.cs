@@ -31,7 +31,7 @@ public class N : MonoBehaviour
 
 	#region player notifications
 	//public const string DestructibleBreakEntity___ 	= "destructible.break.entity";
-	public const string LineImpactObstacle__ 		= "line.impact.obstacle";
+	public const string LineImpactObstacle___ 		= "line.impact.obstacle";
 	public const string PlayerItemCountChange__		= "game.coins.change";
 	public const string PlayerNewRecord_			= "on.player.new.record";
 	#endregion

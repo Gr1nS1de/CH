@@ -71,6 +71,10 @@ public class GameOverData
 
 public class GameModel : Model
 {
+	public LineModel			lineModel			{ get { return _lineModel					= SearchLocal<LineModel>(					_lineModel,				typeof(LineModel).Name );}}
+
+	private LineModel			_lineModel;
+
 	/*
 	#region Game model
 	public GameState					gameState				{ get { return _gameState; } 		set { _gameState 	= value; } }

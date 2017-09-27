@@ -14,6 +14,9 @@ public class LineView : View
 	private Vector3 mousePos;
 	private float smooth = 0.5f;
 	private Vector2[] _colliderVertexPositions;
+	private bool _isDrawing = false;
+
+	private Tween _duplicateLineTween = null;
 
 	void Start()
 	{
@@ -24,7 +27,6 @@ public class LineView : View
 	public void StartDraw()
 	{
 		ResetLinePoints ();
-		StopAllCoroutines ();
 	}
 
 	public void DrawPoint(Vector3 pos, bool isCollidable)
@@ -63,21 +65,6 @@ public class LineView : View
 
 	public void FinishDraw()
 	{
-		StartCoroutine (DrawDuplicateLineRoutine());
-	}
-		
-	public override void OnRendererTriggerEnter (ViewTriggerDetect triggerDetector, Collider2D otherCollider)
-	{
-		//Debug.LogErrorFormat ("OnRendererTriggerEnter ");
-		ObstacleModel.ObstacleType obstacleType = Utils.GetObstacleTypeByCollider(otherCollider);
-
-		Notify (N.LineImpactObstacle__, NotifyType.GAME, obstacleType, pointsList[pointsList.Count-1]);
-	}
-		
-	#endregion
-
-	private IEnumerator DrawDuplicateLineRoutine()
-	{
 		var tempPointsList = pointsList.ToList ();
 		Vector3 deltaLine = pointsList[pointsList.Count - 1] - pointsList [0];
 
@@ -89,16 +76,36 @@ public class LineView : View
 			tempPointsList[i] = tempPointsList[i-1] + (pointsList[i+1] - pointsList[i]);
 		}
 
-		for (int i = 0; i < tempPointsList.Count; i++)
+		_duplicateLineTween = DOTween.To (()=>0,(pointIndex)=>
 		{
-			yield return null;
-			mousePos = tempPointsList [i];
-			DrawPoint (tempPointsList[i], true);
-		}
+			mousePos = tempPointsList [pointIndex];
+			DrawPoint (tempPointsList[pointIndex], true);
+		}, tempPointsList.Count, 1f)
+			.SetEase(Ease.Linear);
 	}
+		
+	public override void OnRendererTriggerEnter (ViewTriggerDetect triggerDetector, Collider2D otherCollider)
+	{
+		//Debug.LogErrorFormat ("OnRendererTriggerEnter ");
+		ObstacleModel.ObstacleCollisionType obstacleType = Utils.GetObstacleCollisionType(otherCollider.gameObject.layer);
+
+		ObstacleView obstacleView = otherCollider.GetComponentInParent<ObstacleView> ();
+
+		if (obstacleView == null)
+		{
+			Debug.LogErrorFormat ("LineView. OnRendererTriggerEnter. Error: obstacleView == null!");
+			return;
+		}
+
+		Notify (N.LineImpactObstacle___, NotifyType.GAME, obstacleType, pointsList[pointsList.Count-1], obstacleView);
+	}
+		
+	#endregion
 
 	private void ResetLinePoints()
 	{
+		StopAllCoroutines ();
+
 		Line.SetVertexCount(0);
 		pointsList = new List<Vector3>();
 		if(LineCollider != null)
