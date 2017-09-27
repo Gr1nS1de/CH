@@ -8,5 +8,12 @@ public class ObstacleModel : Model
 		Die,
 		Point
 	}
-}
 
+	public enum WhitrOrangeObstacleType
+	{
+		HalfPoint,
+		Point,
+		Die
+	}
+
+}

@@ -9,6 +9,11 @@ public class ObstaclesController : Controller
 		{
 			case N.LineImpactObstacle___:
 				{
+					if (game.model.lineModel.IsDraw ())
+					{
+						return;
+					}
+
 					ObstacleModel.ObstacleCollisionType collisionType = (ObstacleModel.ObstacleCollisionType)data [0];
 					Vector3 currentPosition = (Vector3)data [1];
 					ObstacleView obstacleView = (ObstacleView)data [2];

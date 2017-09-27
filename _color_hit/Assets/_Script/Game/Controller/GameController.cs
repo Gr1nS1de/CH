@@ -76,6 +76,14 @@ public class GameController : Controller
 					}
 					break;
 				}
+
+			case N.GameOver_:
+				{
+					_gameModel.LevelContainer.gameObject.SetActive (false);
+					_gameModel.LevelContainer.gameObject.SetActive (true);
+
+					break;
+				}
 					
 		}
 	}

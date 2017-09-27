@@ -7,6 +7,8 @@ public class LineController : Controller
 	private LineModel 	_lineModel	{ get { return game.model.lineModel;}	}
 	private LineView 	_lineView	{ get { return game.view.lineView;}	}
 
+	private bool _blockLine = false;
+
 	public override void OnNotification (string alias, Object target, params object[] data)
 	{
 		switch (alias)
@@ -28,6 +30,7 @@ public class LineController : Controller
 					{
 						case ContinuousGesturePhase.Started:
 							{
+								
 								_lineView.StartDraw();
 								_lineModel.StartDraw ();
 								break;
@@ -35,15 +38,25 @@ public class LineController : Controller
 
 						case ContinuousGesturePhase.Updated:
 							{
+								if (_blockLine)
+									return;
+								
 								if(deltaPosition.magnitude > 0f)
-									_lineView.DrawPoint (currentPosition, true);
+									_lineView.DrawPoint (currentPosition);
 								break;
 							}
 
 						case ContinuousGesturePhase.Ended:
 							{
-								_lineView.FinishDraw ();
 								_lineModel.FinishDraw ();
+
+								if (_blockLine)
+								{
+									_blockLine = false;
+									return;
+								}
+
+								_lineView.FinishDraw ();
 								break;
 							}
 					}
@@ -56,17 +69,24 @@ public class LineController : Controller
 					Vector3 currentPosition = (Vector3)data [1];
 					ObstacleView obstacleView = (ObstacleView)data [2];
 
+					if (_lineModel.IsDraw ())
+					{
+						_blockLine = true;
+						_lineView.CollapseLineToStart ();
+						return;
+					}
+
 					switch (collisionType)
 					{
 						case ObstacleModel.ObstacleCollisionType.Die:
 							{
-								
+								_lineView.CollapseLineToEnd ();
 								break;
 							}
 
 						case ObstacleModel.ObstacleCollisionType.Point:
 							{
-								
+								_lineView.PunchExpandLine ();
 								break;
 							}
 					}
@@ -74,6 +94,5 @@ public class LineController : Controller
 				}
 		}
 	}
-
-
+		
 }
