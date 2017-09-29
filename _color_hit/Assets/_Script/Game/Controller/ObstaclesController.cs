@@ -9,7 +9,7 @@ public class ObstaclesController : Controller
 		{
 			case N.LineImpactObstacle___:
 				{
-					if (game.model.lineModel.IsDraw ())
+					if (game.model.lineModel.isDraw)
 					{
 						return;
 					}

@@ -69,7 +69,7 @@ public class LineController : Controller
 					Vector3 currentPosition = (Vector3)data [1];
 					ObstacleView obstacleView = (ObstacleView)data [2];
 
-					if (_lineModel.IsDraw ())
+					if (_lineModel.isDraw)
 					{
 						_blockLine = true;
 						_lineView.CollapseLineToStart ();

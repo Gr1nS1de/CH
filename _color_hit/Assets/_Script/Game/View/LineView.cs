@@ -9,17 +9,17 @@ public class LineView : View
 	public LineRenderer Line;
 	public EdgeCollider2D LineCollider;
 
-	private List<Vector3> 	_pointsList= new List<Vector3>();
-	private List<Vector2> 	_colliderList= new List<Vector2>();
-	private Vector3 		_mousePosition;
+	private List<Vector3> 	_pointsList { get { return _lineModel.pointsList; } }
+	private List<Vector2> 	_colliderList { get { return _lineModel.colliderList; } }
 	private float 			_vertexSmooth = 0.5f;
-	private Vector2[] 		_colliderVertexPositions;
-	private bool 			_isDrawing = false;
+	private int 			_lastIndex = -1;
 
 	private Tween 			_duplicateLineTween = null;
 	private Tween 			_collapseLineToStartTween = null;
 	private Tween 			_collapseLineToEndTween = null;
 	private Sequence 		_punchExpandLineSequence = null;
+
+	private LineModel 		_lineModel { get { return game.model.lineModel;}}
 
 	void Start()
 	{
@@ -29,12 +29,14 @@ public class LineView : View
 	#region public methods
 	public void StartDraw()
 	{
-		ClearLinePoints ();
+		Line.SetVertexCount(0);
+		LineCollider.Reset ();
+		LineCollider.enabled = true;
 	}
 
 	public void DrawPoint(Vector3 pos)
 	{
-		if (!_pointsList.Contains (_mousePosition))
+		if (!_pointsList.Contains (pos))
 		{
 			pos.z = 0f;
 
@@ -62,15 +64,15 @@ public class LineView : View
 			{
 				_colliderList.Add(new Vector2(pos.x,pos.y));
 
-				_colliderVertexPositions = new Vector2[_colliderList.Count];
+				Vector2[] colliderVertexPositions = new Vector2[_colliderList.Count];
 
 				for(int i = 0; i< _colliderList.Count ; i++)
 				{
-					_colliderVertexPositions[i] = _colliderList[i];
+					colliderVertexPositions[i] = _colliderList[i];
 				}
 
-				if(_colliderVertexPositions.Length >= 2)
-					LineCollider.points = _colliderVertexPositions;
+				if(colliderVertexPositions.Length >= 2)
+					LineCollider.points = colliderVertexPositions;
 			}
 
 		}
@@ -78,6 +80,7 @@ public class LineView : View
 
 	public void FinishDraw()
 	{
+		Debug.LogFormat("FinishDraw. line points count: {0}", _pointsList.Count);
 		ContinueDuplicateLine ();
 	}
 
@@ -104,6 +107,8 @@ public class LineView : View
 
 	public void CollapseLineToStart()
 	{
+		Debug.LogFormat ("CollapseLineToStart. line points count: {0}", _pointsList.Count);
+
 		_duplicateLineTween.Kill ();
 
 		_collapseLineToStartTween = 
@@ -126,17 +131,28 @@ public class LineView : View
 	{
 		_duplicateLineTween.Kill ();
 
+		_lastIndex = -1;
+		int linesPointsCount = Line.positionCount - 1;
+
 		_collapseLineToEndTween = 
-			DOTween.To (() => Line.positionCount-1, pointIndex =>
+			DOTween.To (() =>linesPointsCount, pointIndex =>
 			{
-				Vector3[] linePositions = new Vector3[Line.positionCount];	
-				Line.GetPositions (linePositions);
-				var linePositionsList = linePositions.ToList();
-				linePositionsList.RemoveAt(0);
+				if(_lastIndex == -1 ||_lastIndex - pointIndex > 0)
+				{
+					Vector3[] linePositions = new Vector3[Line.positionCount];	
+					Line.GetPositions (linePositions);
+					var linePositionsList = linePositions.ToList();
+					int removeRange = _lastIndex == -1 ? 1 : _lastIndex - pointIndex;
 
-				Line.SetPositions(linePositionsList.ToArray());
+					linePositionsList.RemoveRange(0, _lastIndex == -1 ? linePositionsList.Count - pointIndex : _lastIndex - pointIndex);
 
-			}, 0, 0.5f).SetEase(Ease.Linear).SetUpdate(UpdateType.Fixed)
+					Line.positionCount = linePositionsList.Count;
+					Line.SetPositions(linePositionsList.ToArray());
+
+					_lastIndex = pointIndex;
+				}
+
+			}, 0, 0.5f).SetEase(Ease.Linear)
 			.OnStart(()=>
 			{
 				LineCollider.enabled = false;
@@ -170,7 +186,6 @@ public class LineView : View
 		var tempPointsList = _pointsList.ToList ();
 		Vector3 deltaLine = _pointsList[_pointsList.Count - 1] - _pointsList [0];
 
-		Debug.LogFormat ("tempPointsList count: {0}. pointsListCount: {1}", tempPointsList.Count, _pointsList.Count);
 		tempPointsList[0] = _pointsList[_pointsList.Count - 1] + (_pointsList[1] - _pointsList[0]);
 
 		for (int i = 1; i < tempPointsList.Count-1; i++)
@@ -180,27 +195,9 @@ public class LineView : View
 
 		_duplicateLineTween = DOTween.To (()=>0,(pointIndex)=>
 		{
-			_mousePosition = tempPointsList [pointIndex];
 			DrawPoint (tempPointsList[pointIndex]);
 		}, tempPointsList.Count, Mathf.Clamp( tempPointsList.Count * 0.033f,  0f, 3f))
 			.SetEase(Ease.Linear);
-	}
-
-	private void ClearLinePoints()
-	{
-		StopAllCoroutines ();
-
-		Line.SetVertexCount(0);
-		_pointsList = new List<Vector3>();
-		if(LineCollider != null)
-		{
-			LineCollider.enabled = true;
-			_colliderList = new List<Vector2>();
-			bool isTrigger = LineCollider.isTrigger;
-			LineCollider.Reset();
-
-			LineCollider.isTrigger = isTrigger;
-		}
 	}
 }
 
