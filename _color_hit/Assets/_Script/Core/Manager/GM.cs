@@ -32,7 +32,7 @@ public class GM : Controller
 			InitGameSettings ();
 			InitTweening ();
 			Localization.InitLanguage ();
-			Debug.logger.logEnabled = IsLoggsEnabled;
+			Debug.unityLogger.logEnabled = IsLoggsEnabled;
 		}
 		else
 		{

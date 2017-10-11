@@ -18,6 +18,7 @@ public class LineView : View
 	private Tween 			_collapseLineToStartTween = null;
 	private Tween 			_collapseLineToEndTween = null;
 	private Sequence 		_punchExpandLineSequence = null;
+	private	string			_lineTweenId = "line.tween.id";
 
 	private LineModel 		_lineModel { get { return game.model.lineModel;}}
 
@@ -32,6 +33,7 @@ public class LineView : View
 		Line.SetVertexCount(0);
 		LineCollider.Reset ();
 		LineCollider.enabled = true;
+		DOTween.Kill (_lineTweenId);
 	}
 
 	public void DrawPoint(Vector3 pos)
@@ -102,7 +104,8 @@ public class LineView : View
 					Line.endWidth = width;
 				}, 0.05f, 0.1f)
 				.SetEase(Ease.Linear)
-			);
+			)
+			.SetId(_lineTweenId);
 	}
 
 	public void CollapseLineToStart()
@@ -116,7 +119,7 @@ public class LineView : View
 			{
 				Line.SetVertexCount(pointIndex);
 
-			}, 0, 0.5f).SetEase(Ease.Linear)
+			}, 0, _lineModel.lineDrawTimeLength).SetEase(Ease.Linear)
 			.OnStart(()=>
 			{
 				LineCollider.enabled = false;
@@ -124,7 +127,8 @@ public class LineView : View
 			.OnComplete(()=>
 			{
 				//ClearLinePoints();
-			});
+			})
+			.SetId(_lineTweenId);
 	}
 
 	public void CollapseLineToEnd()
@@ -152,7 +156,7 @@ public class LineView : View
 					_lastIndex = pointIndex;
 				}
 
-			}, 0, 0.5f).SetEase(Ease.Linear)
+			}, 0, _lineModel.lineDrawTimeLength).SetEase(Ease.Linear)
 			.OnStart(()=>
 			{
 				LineCollider.enabled = false;
@@ -160,7 +164,8 @@ public class LineView : View
 			.OnComplete(()=>
 			{
 				//ClearLinePoints();
-			});
+			})
+			.SetId(_lineTweenId);
 	}
 		
 	public override void OnRendererTriggerEnter (ViewTriggerDetect triggerDetector, Collider2D otherCollider)
@@ -196,8 +201,9 @@ public class LineView : View
 		_duplicateLineTween = DOTween.To (()=>0,(pointIndex)=>
 		{
 			DrawPoint (tempPointsList[pointIndex]);
-		}, tempPointsList.Count, Mathf.Clamp( tempPointsList.Count * 0.033f,  0f, 3f))
-			.SetEase(Ease.Linear);
+		}, tempPointsList.Count, _lineModel.lineDrawTimeLength)
+		.SetEase(Ease.Linear)
+		.SetId(_lineTweenId);
 	}
 }
 
