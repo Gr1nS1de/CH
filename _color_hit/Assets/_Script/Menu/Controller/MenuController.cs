@@ -29,12 +29,6 @@ public class MenuController : Controller
 	{
 		switch (alias)
 		{
-			case N.OnStart:
-				{
-					OnStart ();
-					break;
-				}
-
 			case N.GameStart:
 				{
 					break;
@@ -48,7 +42,7 @@ public class MenuController : Controller
 		}
 	}
 
-	void OnStart()
+	void Start()
 	{
 	}
 

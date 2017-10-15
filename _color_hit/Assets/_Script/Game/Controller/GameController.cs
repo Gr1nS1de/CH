@@ -41,17 +41,6 @@ public class GameController : Controller
 	{
 		switch ( alias )
 		{
-			case N.RCAwakeLoad:
-				{
-					break;
-				}
-
-			case N.OnStart:
-				{
-					OnStart();
-
-					break;
-				}
 
 			case N.LineImpactObstacle___:
 				{
@@ -88,9 +77,9 @@ public class GameController : Controller
 		}
 	}
 		
-	private void OnStart()
+	void Start()
 	{
 
 	}
 
-	}
+}

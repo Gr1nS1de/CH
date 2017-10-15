@@ -10,11 +10,6 @@ public class GameServicesController : Controller
 	{
 		switch (alias)
 		{
-			case N.OnStart:
-				{
-					OnStart ();
-					break;
-				}
 
 			case N.PlayerNewRecord_:
 				{
@@ -36,7 +31,7 @@ public class GameServicesController : Controller
 
 	}
 
-	private void OnStart()
+	void Start()
 	{
 		ConnectGameServices ();
 	}

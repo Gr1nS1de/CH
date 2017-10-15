@@ -53,8 +53,6 @@ public class GM : Controller
 
 		if(_analyticsManager == null)
 			_analyticsManager = new AnalyticsManager ();
-
-		Notify( N.RCAwakeLoad );
 	}
 
 	private void InitTweening()
@@ -68,9 +66,7 @@ public class GM : Controller
 
 	void Start()
 	{		
-
 		SetGameTheme(DefaultGameTheme);
-		NotifyNextFrame(N.OnStart);
 	}
 		
 	public override void OnNotification (string alias, Object target, params object[] data)

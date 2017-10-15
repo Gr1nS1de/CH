@@ -11,12 +11,6 @@ public class PlayerDataController : Controller
 	{
 		switch ( alias )
 		{
-			case N.RCAwakeLoad:
-				{
-					OnAwakeInit ();
-					break;
-				}
-
 			case N.GameStart:
 				{
 					_playerDataModel.currentScore = 0;
@@ -27,7 +21,7 @@ public class PlayerDataController : Controller
 
 	}
 
-	private void OnAwakeInit()
+	void Awake()
 	{
 		_playerDataModel.playerRecord = Prefs.PlayerData.GetRecord ();
 		_playerDataModel.coinsCount = Prefs.PlayerData.GetCoinsCount ();

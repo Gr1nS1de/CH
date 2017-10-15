@@ -21,7 +21,6 @@ public class N : MonoBehaviour
 	#endregion
 
 	#region Game notifications
-	public const string OnStart						= "on.start";
 	public const string GameStart					= "game.start";
 	public const string GamePlay					= "game.play";
 	public const string GamePause					= "game.pause";
@@ -58,7 +57,6 @@ public class N : MonoBehaviour
 	#endregion
 
 	#region Resources controllers notifications
-	public const string RCAwakeLoad					= "resource.controllers.awake.load";
 	public const string RCLoadGameTheme_			= "resource.controllers.load.game_theme";
 	#endregion
 }

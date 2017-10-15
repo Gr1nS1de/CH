@@ -16,18 +16,7 @@ public class PurchaseController : Controller
 	{
 		switch (alias)
 		{
-			case N.RCAwakeLoad:
-				{
-					break;
-				}
-
-			case N.OnStart:
-				{
-					OnStart ();
-
-					break;
-				}
-
+			
 			case N.PurchaseDoubleCoin:
 				{
 					purchase (DOUBLE_COIN);
@@ -49,7 +38,7 @@ public class PurchaseController : Controller
 		}
 	}
 
-	private void OnStart()
+	void Start()
 	{
 		#if UNITY_ANDROID
 		InitProductsAndroid ();

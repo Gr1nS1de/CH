@@ -12,13 +12,6 @@ public class AnalyticsController : Controller
 	{
 		switch ( alias )
 		{
-			case N.OnStart:
-				{
-					OnStart ();
-
-					break;
-				}
-
 			case N.GameStart:
 				{
 					/*
@@ -114,7 +107,7 @@ public class AnalyticsController : Controller
 		}
 	}
 
-	private void OnStart()
+	void Start()
 	{
 	}
 

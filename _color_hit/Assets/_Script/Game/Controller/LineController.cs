@@ -13,12 +13,6 @@ public class LineController : Controller
 	{
 		switch (alias)
 		{
-			case N.OnStart:
-				{
-					
-					break;
-				}
-
 			case N.OnInput____:
 				{
 					GameObject selectedGameObject = (GameObject)data [0];
