@@ -4,7 +4,7 @@ using DG.Tweening;
 
 public class ObstacleOrangeWhiteView : ObstacleView
 {
-	public SpriteRenderer MainRenderer;
+	public Transform MainRenderer;
 
 	[SerializeField]
 	private ObstacleModel.WhitrOrangeObstacleType _obstacleType;
@@ -13,8 +13,8 @@ public class ObstacleOrangeWhiteView : ObstacleView
 
 	void OnEnable()
 	{
-		if (GetComponent<SpriteRenderer> ())
-			MainRenderer = GetComponent<SpriteRenderer> ();
+		if(MainRenderer == null && GetComponent<SpriteRenderer>() != null)
+			MainRenderer = transform;
 		
 		_collisionType = Utils.GetObstacleCollisionType (MainRenderer.gameObject.layer);
 
@@ -27,7 +27,7 @@ public class ObstacleOrangeWhiteView : ObstacleView
 				case ObstacleModel.WhitrOrangeObstacleType.Die:
 					{
 						_collisionSequence
-							.Append(MainRenderer.transform.DOPunchScale(new Vector3(0.1f, 0.1f, 0f), 0.3f, 1, 1))
+							.Append(MainRenderer.DOPunchScale(new Vector3(0.1f, 0.1f, 0f), 0.3f, 1, 1))
 							.SetAutoKill(false)
 							.Pause();
 						break;
@@ -36,7 +36,7 @@ public class ObstacleOrangeWhiteView : ObstacleView
 				case ObstacleModel.WhitrOrangeObstacleType.Point:
 					{
 						_collisionSequence
-							.Append(MainRenderer.transform.DOScale(Vector3.zero, 0.3f))
+							.Append(MainRenderer.DOScale(Vector3.zero, 0.3f))
 							.SetAutoKill(false)
 							.Pause();
 						break;
@@ -45,7 +45,7 @@ public class ObstacleOrangeWhiteView : ObstacleView
 				case ObstacleModel.WhitrOrangeObstacleType.HalfPoint:
 					{
 						_collisionSequence
-							.Append(MainRenderer.transform.DOScaleX(0f, 0.3f))
+							.Append(MainRenderer.DOScaleX(0f, 0.3f))
 							.SetAutoKill(false)
 							.Pause();
 						break;
