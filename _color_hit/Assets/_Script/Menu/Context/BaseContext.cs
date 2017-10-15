@@ -21,7 +21,6 @@ public abstract class BaseContext : Context
 
 	public virtual void Load()
 	{
-		Debug.LogErrorFormat ("Load state: {0}", ContextType);
 		IsShow = true;
 	}
 

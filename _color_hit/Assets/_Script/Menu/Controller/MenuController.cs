@@ -5,6 +5,13 @@ using DG.Tweening;
 
 public class MenuController : Controller
 {
+	public MainMenuContextController		MainMenuContextController		{ get { return _mainMenuContextController		= SearchLocal(	_mainMenuContextController,		typeof(MainMenuContextController).Name);	} }
+	public MainContextController			MainContextController			{ get { return _mainContextController			= SearchLocal(	_mainContextController,			typeof(MainContextController).Name);	} }
+	public SelectLevelContextController		SelectLevelContextController	{ get { return _selectLevelContextController	= SearchLocal(	_selectLevelContextController,	typeof(SelectLevelContextController).Name);	} }
+
+	private SelectLevelContextController	_selectLevelContextController;
+	private MainContextController			_mainContextController;
+	private MainMenuContextController		_mainMenuContextController;
 	/*
 	#region Declare controllers reference
 	public InGamePanelController		InGamePanelController			{ get { return _inGamePanelController 		= SearchLocal<InGamePanelController>(		_inGamePanelController,		typeof(InGamePanelController).Name);	} }

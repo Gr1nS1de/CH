@@ -8,9 +8,14 @@ public class AnalyticsManager
 {
 	public AnalyticsManager()
     {        
-        //подписка на игровые события
         CustomEventDelegate.ActionCustomEvent += CustomEvent;
     }
+
+	~AnalyticsManager()
+	{
+		CustomEventDelegate.ActionCustomEvent -= CustomEvent;
+
+	}
 
     private void CustomEvent(CustomEvent cEvent)
 	{
