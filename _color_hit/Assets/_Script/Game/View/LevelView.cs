@@ -1,19 +1,27 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
+[ExecuteInEditMode]
 public class LevelView : MonoBehaviour
 {
+	public List<Transform> StepsList;
 
-	// Use this for initialization
-	void Start ()
+	void OnEnable()
 	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
+		transform.name = string.Format("Level_{0:00}", transform.GetSiblingIndex () + 1);
+
+		int stepsCount = transform.childCount;
+
+		if(StepsList == null || StepsList.Count != stepsCount)
+		{
+			StepsList = new List<Transform> ();
+
+			for (int i = 0; i < stepsCount; i++)
+			{
+				StepsList.Add (transform.GetChild(i));
+			}
+		}
 	}
 }
 

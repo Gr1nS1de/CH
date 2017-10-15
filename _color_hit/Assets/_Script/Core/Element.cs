@@ -140,6 +140,34 @@ public abstract class Element : MonoBehaviour
 		return searchFor;
 	}
 
+	public List<T> SearchLocal<T>( List<T> obj, string storeKey = "", bool update = false ) where T : Object
+	{
+		if (m_Storage.ContainsKey (storeKey) && storeKey != "" && !update)
+		{
+			if (m_Storage [storeKey] != null)
+			{
+				return (List<T>)m_Storage [storeKey];
+			}
+			else
+			{
+				m_Storage.Remove (storeKey);
+			}
+		}
+
+		List<T> searchFor = new List<T>( transform.GetComponents<T>());
+		searchFor.AddRange (transform.GetComponentsInChildren<T> (true));
+
+		if ( searchFor.Count > 0 && storeKey != "" )
+		{
+			if ( update && m_Storage.ContainsKey( storeKey ) )
+				m_Storage.Remove( storeKey );
+
+			m_Storage.Add( storeKey, searchFor.ToArray() );
+		}
+
+		return searchFor;
+	}
+
 	public T[] SearchLocal<T>( T[] obj, string storeKey = "", bool update = false ) where T : Object
 	{
 		if (m_Storage.ContainsKey (storeKey) && storeKey != "" && !update)

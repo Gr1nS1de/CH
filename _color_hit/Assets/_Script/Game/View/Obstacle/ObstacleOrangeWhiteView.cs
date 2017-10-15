@@ -2,7 +2,7 @@
 using System.Collections;
 using DG.Tweening;
 
-public class ObstacleWhiteOrangeView : ObstacleView
+public class ObstacleOrangeWhiteView : ObstacleView
 {
 	public SpriteRenderer MainRenderer;
 
