@@ -5,7 +5,7 @@ using System.Collections.Generic;
 [ExecuteInEditMode]
 public class GameView : View
 {
-	public List<StyleView>			StylesViewList;
+	public List<StyleView> 			StylesViewList;
 	
 	public LineView					lineView			{ get { return _lineView 		= SearchLocal(			_lineView,			typeof(LineView).Name ); } }
 	//public PlayerView				playerView			{ get { return _playerView 			= SearchLocal<PlayerView>(			_playerView,			typeof(PlayerView).Name ); } }

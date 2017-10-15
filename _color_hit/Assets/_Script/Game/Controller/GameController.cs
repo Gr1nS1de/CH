@@ -35,6 +35,7 @@ public class GameController : Controller
 	#endregion
 */
 	private GameModel 				_gameModel	{ get { return game.model;}}
+	private GameView 				_gameView	{ get { return game.view;}}
 	private PlayerDataModel 		_playerDataModel	{ get { return core.playerDataModel;}}
 
 	public override void OnNotification( string alias, Object target, params object[] data )
@@ -68,8 +69,8 @@ public class GameController : Controller
 
 			case N.GameOver_:
 				{
-					_gameModel.LevelContainer.gameObject.SetActive (false);
-					_gameModel.LevelContainer.gameObject.SetActive (true);
+					_gameView.GetStyleView(GM.Instance.DefaultStyle).transform.parent.gameObject.SetActive(false);
+					_gameView.GetStyleView(GM.Instance.DefaultStyle).transform.parent.gameObject.SetActive(true);
 
 					break;
 				}

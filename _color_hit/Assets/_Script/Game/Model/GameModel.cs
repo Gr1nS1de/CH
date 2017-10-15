@@ -11,12 +11,6 @@ public enum GameState
 	GameOver
 }
 
-public enum GameThemeType
-{
-	DarkBlueGarage	= 0,
-	PinkCity		= 1
-}
-
 public enum GameSpeedState
 {
 	NotDefined,
@@ -71,10 +65,11 @@ public class GameOverData
 
 public class GameModel : Model
 {
-	public Transform			LevelContainer;
-	public LineModel			lineModel			{ get { return _lineModel					= SearchLocal<LineModel>(					_lineModel,				typeof(LineModel).Name );}}
+	public LineModel			lineModel			{ get { return _lineModel 	= SearchLocal(_lineModel,	typeof(LineModel).Name );}}
+	public StyleModel			styleModel			{ get { return _styleModel 	= SearchLocal(_styleModel,	typeof(StyleModel).Name );}}
 
 	private LineModel			_lineModel;
+	private StyleModel			_styleModel;
 	/*
 	#region Game model
 	public GameState					gameState				{ get { return _gameState; } 		set { _gameState 	= value; } }

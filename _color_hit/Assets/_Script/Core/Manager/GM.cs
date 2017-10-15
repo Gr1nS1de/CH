@@ -15,13 +15,12 @@ public class GM : Controller
 
 	private const string 		LeaderBoardPrivate = "http://dreamlo.com/lb/HmyLFso9EUmOvvnmRzgKsw1og-BQzKSU-1t0Vk36HwIg";
 
-	public GameThemeType 		DefaultGameTheme = GameThemeType.DarkBlueGarage;
+	public StyleId 				DefaultStyle = StyleId.OrangeWhite;
 	[HideInInspector]
 	public Vector2 				ScreenSize;
 	public bool 				IsLoggsEnabled = true;
 
 	private AnalyticsManager 	_analyticsManager = null;
-	private int					_gameOversCounter = 0;
 
 	void Awake()
 	{
@@ -30,7 +29,7 @@ public class GM : Controller
 			Instance = this;
 
 			InitGameSettings ();
-			InitTweening ();
+			DOTween.Init ();
 			Localization.InitLanguage ();
 			Debug.unityLogger.logEnabled = IsLoggsEnabled;
 		}
@@ -55,18 +54,9 @@ public class GM : Controller
 			_analyticsManager = new AnalyticsManager ();
 	}
 
-	private void InitTweening()
-	{
-		//DOTween.KillAll();	
-
-		//if (Time.realtimeSinceStartup < 1)
-		DOTween.Init ();
-		//DOTween.defaultAutoPlay = AutoPlay.None;
-	}
-
 	void Start()
 	{		
-		SetGameTheme(DefaultGameTheme);
+		SetStyle(DefaultStyle);
 	}
 		
 	public override void OnNotification (string alias, Object target, params object[] data)
@@ -91,10 +81,11 @@ public class GM : Controller
 
 	}
 
-	public void SetGameTheme(GameThemeType gameThemeType)
+	public void SetStyle(StyleId styleId)
 	{
-		Notify (N.RCLoadGameTheme_, NotifyType.ALL, gameThemeType);
+		Notify (N.SetStyle_, NotifyType.ALL, styleId);
 	}
+
 	/*
 	public Gradient		backgroundMenuGradient 	{ get { return _backgroundMenuGradient; }		set { _backgroundMenuGradient = value; } } 
 	public Gradient		backgroundGameGradient 	{ get { return _backgroundGameGradient; } }

@@ -27,7 +27,7 @@ public enum UIWindowState
 [System.Serializable]
 public struct UITheme
 {
-	public GameThemeType GameThemeType;
+	public StyleId StyleId;
 	public Color IconsColor;
 	public Color BackgroundColor;
 	public Sprite PlayButtonBGSprite;
