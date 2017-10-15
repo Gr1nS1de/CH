@@ -49,5 +49,14 @@ public abstract class StyleView : View
 			}
 		}
 	}
+
+	#region public methods
+
+	public virtual void SetStyle()
+	{
+
+	}
+
+	#endregion
 }
 

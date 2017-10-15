@@ -69,8 +69,8 @@ public class GameController : Controller
 
 			case N.GameOver_:
 				{
-					_gameView.GetStyleView(GM.Instance.DefaultStyle).transform.parent.gameObject.SetActive(false);
-					_gameView.GetStyleView(GM.Instance.DefaultStyle).transform.parent.gameObject.SetActive(true);
+					_gameView.GetStyleView(GM.Instance.CurrentStyle).transform.parent.gameObject.SetActive(false);
+					_gameView.GetStyleView(GM.Instance.CurrentStyle).transform.parent.gameObject.SetActive(true);
 
 					break;
 				}
