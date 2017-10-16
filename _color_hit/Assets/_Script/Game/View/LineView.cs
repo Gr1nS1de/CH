@@ -188,6 +188,9 @@ public class LineView : View
 
 	private void ContinueDuplicateLine()
 	{
+		if (_pointsList.Count < 2)
+			return;
+		
 		var tempPointsList = _pointsList.ToList ();
 		Vector3 deltaLine = _pointsList[_pointsList.Count - 1] - _pointsList [0];
 

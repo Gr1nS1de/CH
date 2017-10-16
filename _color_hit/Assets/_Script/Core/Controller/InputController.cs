@@ -9,7 +9,7 @@ public class InputController : Controller
 
 	public void OnDrag(DragGesture e)
 	{
-		Notify (N.OnInput____, NotifyType.GAME, e.StartSelection, Camera.main.ScreenToWorldPoint(e.Position), e.DeltaMove, e.Phase);
+		Notify (N.DragInput____, NotifyType.ALL, e.StartSelection, Camera.main.ScreenToWorldPoint(e.Position), e.DeltaMove, e.Phase);
 	}
 
 	/*

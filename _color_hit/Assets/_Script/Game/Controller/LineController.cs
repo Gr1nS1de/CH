@@ -13,7 +13,7 @@ public class LineController : Controller
 	{
 		switch (alias)
 		{
-			case N.OnInput____:
+			case N.DragInput____:
 				{
 					GameObject selectedGameObject = (GameObject)data [0];
 					Vector3 currentPosition = (Vector3)data [1];

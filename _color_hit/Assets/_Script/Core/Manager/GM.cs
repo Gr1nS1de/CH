@@ -45,6 +45,8 @@ public class GM : Controller
 
 		ScreenSize = new Vector2 (screenWidth, screenHeight);
 
+		Debug.LogFormat ("ScrrenSize: {0}", ScreenSize);
+
 		if(_analyticsManager == null)
 			_analyticsManager = new AnalyticsManager ();
 	}

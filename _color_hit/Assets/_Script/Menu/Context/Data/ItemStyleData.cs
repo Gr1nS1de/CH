@@ -4,6 +4,13 @@ using Slash.Unity.DataBind.Core.Data;
 
 public class ItemStyleData : Context
 {
+	private readonly Property<Vector3> itemPositionProperty = new Property<Vector3>();
+	public Vector3 ItemPosition
+	{
+		get { return this.itemPositionProperty.Value; }
+		set { this.itemPositionProperty.Value = value; }
+	}
+
 	private readonly Property<bool> isLockedProperty = new Property<bool>();
 	public bool IsLocked
 	{
@@ -24,5 +31,8 @@ public class ItemStyleData : Context
 		get { return this.textCompleteStatsProperty.Value; }
 		set { this.textCompleteStatsProperty.Value = value; }
 	}
+
+	public float PositionPercantage;
+
 }
 

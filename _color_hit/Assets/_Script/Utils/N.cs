@@ -4,7 +4,7 @@ using System.Collections;
 public class N : MonoBehaviour
 {
 	#region Core notifications
-	public const string OnInput____					= "on.input";
+	public const string DragInput____					= "on.input";
 	public const string OnDoubleTapInput			= "on.double.tap.input";
 	public const string SetStyle_					= "set.style";
 

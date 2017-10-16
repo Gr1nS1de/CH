@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LevelController : MonoBehaviour
+public class LevelController : Controller
 {
 
-	// Use this for initialization
-	void Start ()
+	public override void OnNotification (string alias, Object target, params object[] data)
 	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
+		switch (alias)
+		{
+			case N.SetStyle_:
+				{
+					break;
+				}
+
+		}
 	}
 }
 
