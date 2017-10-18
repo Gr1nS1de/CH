@@ -1,9 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Slash.Unity.DataBind.Core.Data;
+using DG.Tweening;
 
 public class ItemStyleData : Context
 {
+	private readonly Property<StyleId> styleIdProperty = new Property<StyleId>();
+	public StyleId StyleId
+	{
+		get { return this.styleIdProperty.Value; }
+		set { this.styleIdProperty.Value = value; }
+	}
+
 	private readonly Property<Vector3> itemPositionProperty = new Property<Vector3>();
 	public Vector3 ItemPosition
 	{
@@ -40,7 +48,6 @@ public class ItemStyleData : Context
 	}
 
 	public float PositionPercantage;
-	public StyleId StyleId;
 
 	public ItemStyleData()
 	{
@@ -49,7 +56,7 @@ public class ItemStyleData : Context
 
 	public void OnClickItem(StyleId styleId)
 	{
-		Debug.LogErrorFormat ("OnClick styleid: {0}", styleId);
+		Debug.LogFormat ("OnClick styleid: {0}", styleId);
 	}
 
 }

@@ -10,7 +10,7 @@
 	/// <summary>
 	///   Provides the enum values of a specified enum type.
 	/// </summary>
-	public class StyleIdProvider : DataProvider
+	public class StyleIdProvider :  DataProvider
 	{
 		#region Fields
 
