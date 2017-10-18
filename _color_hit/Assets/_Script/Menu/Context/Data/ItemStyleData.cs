@@ -11,6 +11,13 @@ public class ItemStyleData : Context
 		set { this.itemPositionProperty.Value = value; }
 	}
 
+	private readonly Property<Vector3> itemScaleProperty = new Property<Vector3>();
+	public Vector3 ItemScale
+	{
+		get { return this.itemScaleProperty.Value; }
+		set { this.itemScaleProperty.Value = value; }
+	}
+
 	private readonly Property<bool> isLockedProperty = new Property<bool>();
 	public bool IsLocked
 	{
@@ -33,6 +40,17 @@ public class ItemStyleData : Context
 	}
 
 	public float PositionPercantage;
+	public StyleId StyleId;
+
+	public ItemStyleData()
+	{
+		ItemScale = Vector3.one * 0.6f;
+	}
+
+	public void OnClickItem(StyleId styleId)
+	{
+		Debug.LogErrorFormat ("OnClick styleid: {0}", styleId);
+	}
 
 }
 

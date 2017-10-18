@@ -9,6 +9,7 @@ public class MainMenuContext : BaseContext
 		get { return ContextType.MainMenuContext; }
 	}
 
+
 	private readonly Collection<ItemStyleData> itemsStyle = new Collection<ItemStyleData>();
 	public Collection<ItemStyleData> ItemsStyle
 	{

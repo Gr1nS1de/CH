@@ -19,10 +19,9 @@ namespace Slash.Unity.DataBind.Foundation.Providers.Getters
     public class EnumGetter : DataProvider
     {
         #region Fields
-
         [SerializeField]
-        [TypeSelection(BaseType = typeof(Enum))]
-        private string enumType;
+		[TypeSelection(BaseType = typeof(Enum))]
+        private string enumType = "StyleId";
 
         #endregion
 
@@ -58,7 +57,7 @@ namespace Slash.Unity.DataBind.Foundation.Providers.Getters
         {
             get
             {
-                return Enum.GetValues(this.EnumType);
+				return Enum.GetValues(typeof(StyleId));
             }
         }
 

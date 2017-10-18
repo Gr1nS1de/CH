@@ -13,12 +13,13 @@ public class MainMenuContextController : Controller
 	public List<ContextHolder> StyleContextHoldersList;
 
 	public const float ITEMS_EXPAND_GAP = 15f;
-	public const float STYLE_ITEM_PERCANTAGE_GAP = 0.053f;
+	public const float STYLE_ITEM_PERCANTAGE_GAP = 0.057f;
 	public const float SELECTED_STYLE_RADIUS = 155f;
 	public const float ITEM_STYLE_RADIUS = 100f;
 
-	private Tween _pathTween;
-	private string _styleItemsMoveTweenId = "style.items.tween.id";
+	private Tween _pathForPointsTween;
+	private Sequence _selectStyleSequence;
+	private string _styleItemMoveTweenId = "style.item.tween.id";
 
 	public override void OnNotification (string alias, Object target, params object[] data)
 	{
@@ -33,41 +34,66 @@ public class MainMenuContextController : Controller
 
 			case N.DragInput____:
 				{	
-					if (DOTween.IsTweening (_styleItemsMoveTweenId))
-					{
-						return;
-					}
-
 					GameObject selectedGameObject = (GameObject)data [0];
 					Vector3 currentPosition = (Vector3)data [1];
 					Vector2 deltaPosition = (Vector2)data [2];
 					ContinuousGesturePhase gesturePhase = (ContinuousGesturePhase) data[3];
 
+					if (deltaPosition.x == 0f)
+						return;
+
 					int maxItems = StyleContextHoldersList.Count;
 					int i = 0;
-					
-					if (deltaPosition.x != 0f)
+
+					if (gesturePhase == ContinuousGesturePhase.Ended)
 					{
-						//Debug.LogFormat ("Delta position x: {0}", deltaPosition.x);
-						bool isLeft = deltaPosition.x < 0f;
+						DOTween.Kill (_styleItemMoveTweenId);
 
 						StyleContextHoldersList.ForEach (itemStyleContextHolder =>
 						{
 							ItemStyleData itemData = (ItemStyleData)itemStyleContextHolder.Context;
-							float pathPointValue = itemData.PositionPercantage + deltaPosition.x / 400f; 
+							float pathPointValue = itemData.PositionPercantage + deltaPosition.x * 0.0008f; 
 							float plathClampValue = Mathf.Clamp( pathPointValue, 0f+STYLE_ITEM_PERCANTAGE_GAP*i, 1f-((maxItems - 1- i) * STYLE_ITEM_PERCANTAGE_GAP));	
 
 							DOTween.To(()=>itemData.PositionPercantage, (val)=>
 							{
-								itemData.ItemPosition = _pathTween.PathGetPoint (val);
-							}, plathClampValue, 0.03f).SetUpdate(UpdateType.Late).SetEase(Ease.Linear).SetId(_styleItemsMoveTweenId);
+								itemData.ItemPosition = _pathForPointsTween.PathGetPoint (val);
+							}, plathClampValue, 0.1f).SetUpdate(UpdateType.Normal).SetEase(Ease.Linear).SetId(_styleItemMoveTweenId);
 
 							//Debug.LogFormat ("Item name: {0}. pathPointValue: {1}. clamp: {2}. pathpoint: {3}", itemStyleContextHolder.name, pathPointValue,plathClampValue, _pathTween.PathGetPoint (pathPointValue));
 
 							itemData.PositionPercantage = plathClampValue;
 							i++;
 						});
+
+						return;
 					}
+
+					if (gesturePhase != ContinuousGesturePhase.Started && DOTween.IsTweening (_styleItemMoveTweenId))
+					{
+						return;
+					}
+						
+					//Debug.LogFormat ("Delta position x: {0}", deltaPosition.x);
+					bool isLeft = deltaPosition.x < 0f;
+
+					StyleContextHoldersList.ForEach (itemStyleContextHolder =>
+					{
+						ItemStyleData itemData = (ItemStyleData)itemStyleContextHolder.Context;
+						float pathPointValue = itemData.PositionPercantage + deltaPosition.x * 0.0005f; 
+						float plathClampValue = Mathf.Clamp( pathPointValue, 0f+STYLE_ITEM_PERCANTAGE_GAP*i, 1f-((maxItems - 1- i) * STYLE_ITEM_PERCANTAGE_GAP));	
+
+						DOTween.To(()=>itemData.PositionPercantage, (val)=>
+						{
+							itemData.ItemPosition = _pathForPointsTween.PathGetPoint (val);
+						}, plathClampValue, 0.03f).SetUpdate(UpdateType.Late).SetEase(Ease.Linear).SetId(_styleItemMoveTweenId);
+
+						//Debug.LogFormat ("Item name: {0}. pathPointValue: {1}. clamp: {2}. pathpoint: {3}", itemStyleContextHolder.name, pathPointValue,plathClampValue, _pathTween.PathGetPoint (pathPointValue));
+
+						itemData.PositionPercantage = plathClampValue;
+						i++;
+					});
+
 					break;
 				}
 		}
@@ -83,6 +109,7 @@ public class MainMenuContextController : Controller
 		}
 
 		InitStyleItems ();
+		InitSelectedItem ();
 	}
 
 	private void InitStyleItems()
@@ -107,8 +134,8 @@ public class MainMenuContextController : Controller
 			new Vector3(Screen.width, halfY, 0f) + new Vector3(ITEM_STYLE_RADIUS*StyleContextHoldersList.Count*2f, 0f, 0f)
 		};
 
-		_pathTween = LevelsMovePathTweenObj.transform.DOPath (wayPoints.ToArray(), 0.5f).SetAutoKill(false);
-		_pathTween.ForceInit ();
+		_pathForPointsTween = LevelsMovePathTweenObj.transform.DOPath (wayPoints.ToArray(), 0.5f).SetAutoKill(false);
+		_pathForPointsTween.ForceInit ();
 
 		StyleContextHoldersList.ForEach (contextHolder =>
 		{
@@ -122,10 +149,15 @@ public class MainMenuContextController : Controller
 			ItemStyleData itemData = (ItemStyleData)itemStyleContextHolder.Context;
 			float pathPointValue = Mathf.Clamp01(0.5f + itemData.PositionPercantage + (STYLE_ITEM_PERCANTAGE_GAP * i));
 
-			itemData.ItemPosition = _pathTween.PathGetPoint(pathPointValue);
+			itemData.ItemPosition = _pathForPointsTween.PathGetPoint(pathPointValue);
 			itemData.PositionPercantage = pathPointValue;
 			i++;
 		});
+	}
+
+	private void InitSelectedItem()
+	{
+
 	}
 }
 
