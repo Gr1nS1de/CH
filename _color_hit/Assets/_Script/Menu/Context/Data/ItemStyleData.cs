@@ -2,9 +2,13 @@
 using System.Collections;
 using Slash.Unity.DataBind.Core.Data;
 using DG.Tweening;
+using System;
 
 public class ItemStyleData : Context
 {
+	public static Vector3 STYLE_ITEM_INIT_SCALE = new Vector3 (0.6f, 0.6f, 1f);
+	public event Action<StyleId> ActionClickStyle;
+
 	private readonly Property<StyleId> styleIdProperty = new Property<StyleId>();
 	public StyleId StyleId
 	{
@@ -51,12 +55,11 @@ public class ItemStyleData : Context
 
 	public ItemStyleData()
 	{
-		ItemScale = Vector3.one * 0.6f;
 	}
 
 	public void OnClickItem(StyleId styleId)
 	{
-		Debug.LogFormat ("OnClick styleid: {0}", styleId);
+		ActionClickStyle (styleId);
 	}
 
 }

@@ -20,6 +20,19 @@ public class MainContextController : Controller
 
 					break;
 				}
+
+			case N.SelectStyleInput_:
+				{
+					StyleId styleId = (StyleId)data [0];
+
+					Debug.LogFormat ("OnClick styleid: {0}", styleId);
+
+					if (styleId == GM.Instance.CurrentStyle)
+					{
+						GoToState (ContextType.SelectLevelContext);
+					}
+					break;
+				}
 		}
 	}
 		

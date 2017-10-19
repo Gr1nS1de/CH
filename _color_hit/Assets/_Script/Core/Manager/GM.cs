@@ -74,6 +74,17 @@ public class GM : Controller
 					}*/
 					break;
 				}
+
+			case N.SelectStyleInput_:
+				{
+					StyleId styleId = (StyleId)data [0];
+
+					if (CurrentStyle != styleId)
+					{
+						SetStyle (styleId);
+					}
+					break;
+				}
 		}
 
 	}
@@ -81,6 +92,9 @@ public class GM : Controller
 	public void SetStyle(StyleId styleId)
 	{
 		StyleData styleData = core.styleModel.GetStyleData(styleId);
+
+
+		CurrentStyle = styleId;
 
 		Notify (N.SetStyle_, NotifyType.ALL, styleData);
 	}

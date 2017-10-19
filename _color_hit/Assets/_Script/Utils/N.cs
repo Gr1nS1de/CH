@@ -4,9 +4,10 @@ using System.Collections;
 public class N : MonoBehaviour
 {
 	#region Core notifications
-	public const string DragInput____					= "on.input";
+	public const string DragInput____				= "drag.input";
 	public const string OnDoubleTapInput			= "on.double.tap.input";
 	public const string SetStyle_					= "set.style";
+	public const string SelectStyleInput_			= "select.style.input";
 
 	#region Game Services notifications
 	public const string OnGameServicesConnected_	= "on.game.services.connected";
