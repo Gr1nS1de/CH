@@ -25,8 +25,6 @@ public class MainContextController : Controller
 				{
 					StyleId styleId = (StyleId)data [0];
 
-					Debug.LogFormat ("OnClick styleid: {0}", styleId);
-
 					if (styleId == GM.Instance.CurrentStyle)
 					{
 						GoToState (ContextType.SelectLevelContext);

@@ -83,20 +83,21 @@ public class MainMenuContextController : Controller
 
 					foreach(ItemStyleData itemData in MainMenuContext.ItemsStyle)
 					{
+						float pathPointValue = itemData.PositionPercantage + deltaPosition.x * 0.0005f; 
+						float plathClampValue = Mathf.Clamp( pathPointValue, 0f+STYLE_ITEM_PERCANTAGE_GAP*i, 1f-((maxItems - 1- i) * STYLE_ITEM_PERCANTAGE_GAP));	
+						float currentItemPositionPercantage = itemData.PositionPercantage;
+
+						itemData.PositionPercantage = plathClampValue;
+
 						if (itemData.IsSelected)
 							continue;
 
-						float pathPointValue = itemData.PositionPercantage + deltaPosition.x * 0.0005f; 
-						float plathClampValue = Mathf.Clamp( pathPointValue, 0f+STYLE_ITEM_PERCANTAGE_GAP*i, 1f-((maxItems - 1- i) * STYLE_ITEM_PERCANTAGE_GAP));	
-
-						DOTween.To(()=>itemData.PositionPercantage, (val)=>
+						DOTween.To(()=>currentItemPositionPercantage, (val)=>
 						{
 							itemData.ItemPosition = _pathForPointsTween.PathGetPoint (val);
 						}, plathClampValue, 0.03f).SetUpdate(UpdateType.Late).SetEase(Ease.Linear).SetId(_styleItemMoveTweenId);
 
 						//Debug.LogFormat ("Item name: {0}. pathPointValue: {1}. clamp: {2}. pathpoint: {3}", itemStyleContextHolder.name, pathPointValue,plathClampValue, _pathTween.PathGetPoint (pathPointValue));
-
-						itemData.PositionPercantage = plathClampValue;
 						i++;
 					}
 
@@ -158,8 +159,6 @@ public class MainMenuContextController : Controller
 		{
 			itemData.ActionClickStyle += OnClickStyleItem;
 
-			float pathPointValue = Mathf.Clamp01(0.5f + itemData.PositionPercantage + (STYLE_ITEM_PERCANTAGE_GAP * i));
-
 			if (itemData.StyleId == GM.Instance.CurrentStyle)
 			{
 				itemData.IsLocked = false;
@@ -172,14 +171,35 @@ public class MainMenuContextController : Controller
 			{
 				itemData.IsLocked = true;
 				itemData.IsSelected = false;
-
-				itemData.ItemPosition = _pathForPointsTween.PathGetPoint (pathPointValue);
-				itemData.PositionPercantage = pathPointValue;
-
 				itemData.ItemScale = Vector3.one * 0.6f;
 
 				i++;
 			}
+		}
+
+		SetItemsLinePosition ();
+	}
+
+	private void SetItemsLinePosition(bool isInit = true)
+	{
+		int i = 0;
+
+		foreach(ItemStyleData itemData in MainMenuContext.ItemsStyle)
+		{
+			float pathPointValue = Mathf.Clamp01((isInit ? 0.5f + itemData.PositionPercantage : MainMenuContext.ItemsStyle [0].PositionPercantage) + (STYLE_ITEM_PERCANTAGE_GAP * i));
+
+			itemData.PositionPercantage = pathPointValue;
+
+			if (itemData.StyleId == GM.Instance.CurrentStyle)
+				continue;
+
+			i++;
+
+			if (!isInit)
+				continue;
+
+			itemData.ItemPosition = _pathForPointsTween.PathGetPoint (pathPointValue);
+
 		}
 	}
 
@@ -218,44 +238,57 @@ public class MainMenuContextController : Controller
 
 			if (isRightOffset)
 			{
-				for (i = currentItemIndex + 1; i < selectItemIndex - currentItemIndex; i++)
+				int offsetCount = selectItemIndex - currentItemIndex;
+				for (i = 0; i < offsetCount; i++)
 				{
-					itemsOffsetList.Add(MainMenuContext.ItemsStyle[i]);
+					itemsOffsetList.Add(MainMenuContext.ItemsStyle[currentItemIndex + i + 1]);
 				}
-
-				itemsOffsetList.Reverse ();
-
 			}
 			else
 			{
-				for (i = selectItemIndex + 1; i < currentItemIndex - selectItemIndex; i++)
+				int offsetCount = currentItemIndex - selectItemIndex;
+
+				for (i = 0; i < offsetCount; i++)
 				{
-					itemsOffsetList.Add(MainMenuContext.ItemsStyle[i]);
+					itemsOffsetList.Add(MainMenuContext.ItemsStyle[selectItemIndex + i + 1]);
 				}
 			}
 
 			int moveItemsCount = itemsOffsetList.Count;
 			Debug.LogErrorFormat ("moveItemsCount: {0}. currentItemIndex: {1}. selectItemIndex: {2}", moveItemsCount, currentItemIndex, selectItemIndex);
+
 			selectStyleSequence
 				.Append (DOTween.To(()=>currentItemData.ItemScale, (valVector)=>currentItemData.ItemScale=valVector, ItemStyleData.STYLE_ITEM_INIT_SCALE, 0.3f))
 				.Append(DOTween.To(()=>selectItemData.ItemPosition, (valVector)=>selectItemData.ItemPosition = valVector, new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f), 0.3f))
-				.Join(DOTween.To(()=>currentItemData.ItemPosition, (valVector)=>currentItemData.ItemPosition = valVector, itemsOffsetList[moveItemsCount - 1].ItemPosition, 0.3f))
+				.Join(DOTween.To(()=>currentItemData.ItemPosition, (valVector)=>currentItemData.ItemPosition = valVector, isRightOffset ? itemsOffsetList[0].ItemPosition : MainMenuContext.ItemsStyle[currentItemIndex - 1].ItemPosition, 0.3f))
 					;
 
+
+			if (isRightOffset)
+				itemsOffsetList.Reverse ();
+			
 			for (i = 0; i < moveItemsCount; i++)
 			{
 				ItemStyleData itemData =itemsOffsetList [i];
+
+				if (itemData.Equals (currentItemData) || itemData.Equals (selectItemData))
+					continue;
 			
 				selectStyleSequence
-					.Join (DOTween.To(()=>itemData.ItemPosition, (valVector)=> itemData.ItemPosition = valVector, isRightOffset ? MainMenuContext.ItemsStyle[currentItemIndex+moveItemsCount - i + 1].ItemPosition : MainMenuContext.ItemsStyle[selectItemIndex + i].ItemPosition, 0.3f ));
-			}
-
+					.Join (DOTween.To(()=>itemData.ItemPosition, (valVector)=> itemData.ItemPosition = valVector, isRightOffset ? MainMenuContext.ItemsStyle[selectItemIndex - i + 1].ItemPosition : MainMenuContext.ItemsStyle[selectItemIndex + i ].ItemPosition, 0.3f ));
+	}
+				
 			currentItemData.IsSelected = false;
 			selectItemData.IsSelected = true;
 
 			selectStyleSequence
+				.OnComplete(()=>
+				{
+					SetItemsLinePosition(false);
+				})
 			.SetId (_styleItemSelectTweenId)
 			.Play ();
+			
 		}
 
 		Notify (N.SelectStyleInput_,NotifyType.ALL, styleId);
