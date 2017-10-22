@@ -53,7 +53,7 @@ public class GM : Controller
 
 	void Start()
 	{		
-		SetStyle(CurrentStyleId);
+		SetStyle(CurrentStyleId, true);
 	}
 		
 	public override void OnNotification (string alias, Object target, params object[] data)
@@ -75,28 +75,57 @@ public class GM : Controller
 					break;
 				}
 
-			case N.SelectStyleInput_:
+			case N.SelectStyle_:
 				{
 					StyleId styleId = (StyleId)data [0];
 
 					if (CurrentStyleId != styleId)
 					{
-						SetStyle (styleId);
+						SetStyle (styleId, false);
 					}
+					break;
+				}
+
+			case N.SelectLevel__:
+				{
+					int level = (int)data [0];
+					int step = (int)data [1];
+
+					GoToState (GameState.Playing);
+
+					Notify (N.StartLevel__, NotifyType.ALL, level, step);
 					break;
 				}
 		}
 
 	}
 
-	public void SetStyle(StyleId styleId)
+	private void GoToState(GameState state)
+	{
+		switch (state)
+		{
+			case GameState.MainMenu:
+				{
+					ui.controller.MainContextController.MainContext.IsShowMainMenu = true;
+					break;
+				}
+
+			case GameState.Playing:
+				{
+					ui.controller.MainContextController.MainContext.IsShowMainMenu = false;
+					break;
+				}
+		}
+	}
+
+	private void SetStyle(StyleId styleId, bool isInit)
 	{
 		StyleData styleData = core.styleModel.GetStyleData(styleId);
 
 
 		CurrentStyleId = styleId;
 
-		Notify (N.SetStyle_, NotifyType.ALL, styleData);
+		Notify (N.SetStyle__, NotifyType.ALL, styleData, isInit);
 	}
 
 	/*

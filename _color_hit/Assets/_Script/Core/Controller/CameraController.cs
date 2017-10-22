@@ -12,9 +12,10 @@ public class CameraController : Controller
 	{
 		switch (alias)
 		{
-			case N.SetStyle_:
+			case N.SetStyle__:
 				{
 					StyleData styleData = (StyleData)data [0];
+					bool isInit = (bool)data [1];
 
 					SetCameraColor (styleData.styleColor);
 					break;

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
@@ -36,7 +37,7 @@ public class GameController : Controller
 */
 	private GameModel 				_gameModel	{ get { return game.model;}}
 	private GameView 				_gameView	{ get { return game.view;}}
-	private PlayerDataModel 		_playerDataModel	{ get { return core.playerDataModel;}}
+	private PlayerData 		_playerDataModel	{ get { return core.playerData;}}
 
 	public override void OnNotification( string alias, Object target, params object[] data )
 	{
@@ -69,9 +70,16 @@ public class GameController : Controller
 
 			case N.GameOver_:
 				{
-					_gameView.GetStyleView(GM.Instance.CurrentStyleId).transform.parent.gameObject.SetActive(false);
-					_gameView.GetStyleView(GM.Instance.CurrentStyleId).transform.parent.gameObject.SetActive(true);
+					_gameView.GetCurrentStyleView().transform.parent.gameObject.SetActive(false);
+					_gameView.GetCurrentStyleView().transform.parent.gameObject.SetActive(true);
 
+					break;
+				}
+
+			case N.RetryLevel:
+				{
+					_gameView.GetCurrentStyleView().transform.parent.gameObject.SetActive(false);
+					_gameView.GetCurrentStyleView().transform.parent.gameObject.SetActive(true);
 					break;
 				}
 					
@@ -82,5 +90,6 @@ public class GameController : Controller
 	{
 
 	}
+		
 
 }

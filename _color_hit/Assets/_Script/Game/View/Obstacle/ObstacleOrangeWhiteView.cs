@@ -29,6 +29,7 @@ public class ObstacleOrangeWhiteView : ObstacleView
 						_collisionSequence
 							.Append(MainRenderer.DOPunchScale(new Vector3(0.1f, 0.1f, 0f), 0.3f, 1, 1))
 							.SetAutoKill(false)
+							.SetRecyclable(true)
 							.Pause();
 						break;
 					}
@@ -38,6 +39,7 @@ public class ObstacleOrangeWhiteView : ObstacleView
 						_collisionSequence
 							.Append(MainRenderer.DOScale(Vector3.zero, 0.3f))
 							.SetAutoKill(false)
+							.SetRecyclable(true)
 							.Pause();
 						break;
 					}
@@ -47,14 +49,22 @@ public class ObstacleOrangeWhiteView : ObstacleView
 						_collisionSequence
 							.Append(MainRenderer.DOScaleX(0f, 0.3f))
 							.SetAutoKill(false)
+							.SetRecyclable(true)
 							.Pause();
 						break;
 					}
 			}
+				
 		}
 	}
 
 	#region public methods
+	public override void Init ()
+	{
+		_collisionSequence.Complete ();
+		_collisionSequence.SmoothRewind ();
+	}
+
 	public override void Collision ()
 	{
 

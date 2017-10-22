@@ -29,4 +29,9 @@ public class GameView : View
 	{
 		return StylesViewList.Find (styleView=>styleView.StyleId == styleId);
 	}
+
+	public StyleView GetCurrentStyleView()
+	{
+		return GetStyleView (GM.Instance.CurrentStyleId);
+	}
 }

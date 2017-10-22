@@ -14,14 +14,15 @@ public class MainContextController : Controller
 	{
 		switch (alias)
 		{
-			case N.SetStyle_:
+			case N.SetStyle__:
 				{
 					StyleData styleData = (StyleData)data [0];
+					bool isInit = (bool)data [1];
 
 					break;
 				}
 
-			case N.SelectStyleInput_:
+			case N.SelectStyle_:
 				{
 					StyleId styleId = (StyleId)data [0];
 
@@ -41,6 +42,7 @@ public class MainContextController : Controller
 		MainContext = new MainContext ();
 
 		MainContextHolder.Context = MainContext;
+		MainContext.ResourceStarsCount = core.playerData.starsCount;
 
 		GoToState (ContextType.MainMenuContext);
 	}

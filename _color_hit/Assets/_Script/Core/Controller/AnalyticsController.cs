@@ -6,7 +6,7 @@ using UnityEngine;
 public class AnalyticsController : Controller
 {
 	private int _lastScore = 0;
-	private PlayerDataModel 				_playerDataModel	{ get { return core.playerDataModel;}}
+	private PlayerData 				_playerDataModel	{ get { return core.playerData;}}
 
 	public override void OnNotification( string alias, Object target, params object[] data )
 	{

@@ -26,9 +26,10 @@ public class MainMenuContextController : Controller
 	{
 		switch (alias)
 		{
-			case N.SetStyle_:
+			case N.SetStyle__:
 				{
 					StyleData styleData = (StyleData)data [0];
+					bool isInit = (bool)data [1];
 
 					break;
 				}
@@ -283,7 +284,7 @@ public class MainMenuContextController : Controller
 			.Play ();
 		}
 			
-		Notify (N.SelectStyleInput_,NotifyType.ALL, styleId);
+		Notify (N.SelectStyle_,NotifyType.ALL, styleId);
 	}
 
 	void OnDestroy()

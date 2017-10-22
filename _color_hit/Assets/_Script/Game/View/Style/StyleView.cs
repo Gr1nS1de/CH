@@ -30,6 +30,8 @@ public abstract class StyleView : View
 						continue;
 					}
 
+					levelView.name = string.Format ("_Level_{0:00}", i + 1);
+
 					LevelsList.Add (levelView);
 				}
 			}

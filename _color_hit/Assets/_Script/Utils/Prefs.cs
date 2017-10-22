@@ -121,8 +121,7 @@ public static class Prefs
 	{
 		public const string GamesPlayedCount 			= "games.played.count";
 		public const string CurrentLanguage 			= "current.language";
-		public const string CoinsCount					= "coins.count";
-		public const string CrystalsCount				= "crystals.count";
+		public const string StarsCount					= "stars.count";
 		public const string IsDoubleCoin				= "is.double.coin";
 		public const string Record 						= "record";
 		public const string CurrentSkinId				= "current.skin.id";
@@ -197,46 +196,26 @@ public static class Prefs
 			PlayerPrefs.SetInt (GamesPlayedCount, GetPlayedGamesCount () + 1);
 		}
 
-		public static void CreditCoins(int count = 1)
+		public static void CreditStars(int count = 1)
 		{
-			PlayerPrefs.SetInt(CoinsCount, GetCoinsCount() + count);
+			PlayerPrefs.SetInt(StarsCount, GetStarsCount() + count);
 		}
 
-		public static void CreditCrystals(int count = 1)
+		public static void DebitStars(int count = 1)
 		{
-			PlayerPrefs.SetInt(CrystalsCount, GetCrystalsCount() + count);
+			PlayerPrefs.SetInt(StarsCount, (int)Mathf.Clamp(GetStarsCount() - count, 0, Mathf.Infinity));
+		}
+			
+		public static bool IsEnoughStars(int price)
+		{
+			return PlayerPrefs.GetInt (StarsCount) >= price;
 		}
 
-		public static void DebitCoins(int count = 1)
+		public static int GetStarsCount()
 		{
-			PlayerPrefs.SetInt(CoinsCount, (int)Mathf.Clamp(GetCoinsCount() - count, 0, Mathf.Infinity));
+			return PlayerPrefs.GetInt (StarsCount, 0);
 		}
-
-		public static void DebitCrystals(int count = 1)
-		{
-			PlayerPrefs.SetInt(CrystalsCount, (int)Mathf.Clamp(GetCrystalsCount() - count, 0, Mathf.Infinity));
-		}
-
-		public static bool IsEnoughCoins(int price)
-		{
-			return PlayerPrefs.GetInt (CoinsCount) >= price;
-		}
-
-		public static bool IsEnoughCrystals(int price)
-		{
-			return PlayerPrefs.GetInt(CrystalsCount) >= price;
-		}
-
-		public static int GetCoinsCount()
-		{
-			return PlayerPrefs.GetInt (CoinsCount);
-		}
-
-		public static int GetCrystalsCount()
-		{
-			return PlayerPrefs.GetInt(CrystalsCount);
-		}
-
+			
 		public static int GetPlayedGamesCount()
 		{
 			return PlayerPrefs.GetInt (GamesPlayedCount);

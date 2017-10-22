@@ -7,6 +7,15 @@ public class ObstaclesController : Controller
 	{
 		switch (alias)
 		{
+			case N.StartLevel__:
+				{
+					int level = (int)data [0];
+					int step = (int)data [1];
+
+					LevelView levelView = game.view.GetCurrentStyleView().LevelsList.Find(lView=>lView.LevelIndex == level);
+					break;
+				}
+
 			case N.LineImpactObstacle___:
 				{
 					if (game.model.lineModel.isDraw)

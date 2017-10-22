@@ -6,10 +6,12 @@ using System.Collections.Generic;
 public class LevelView : MonoBehaviour
 {
 	public List<Transform> StepsList;
+	public int LevelIndex;
 
 	void OnEnable()
 	{
-		transform.name = string.Format("Level_{0:00}", transform.GetSiblingIndex () + 1);
+		LevelIndex = transform.GetSiblingIndex ();
+		transform.name = string.Format("_Level_{0:00}", LevelIndex + 1);
 
 		int stepsCount = transform.childCount;
 

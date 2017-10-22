@@ -12,11 +12,10 @@ public class Core : BaseApplication<GameApplication, MenuApplication>
 	#endregion
 
 	#region models
-	public PlayerDataModel			playerDataModel			{ get { return _playerDataModel		= SearchLocal(	_playerDataModel,	typeof(PlayerDataModel).Name );}}
-	public StyleModel				styleModel				{ get { return _styleModel 			= SearchLocal(	_styleModel,		typeof(StyleModel).Name );}}
+	public PlayerData			playerData;
+	public StyleModel			styleModel				{ get { return _styleModel 			= SearchLocal(	_styleModel,		typeof(StyleModel).Name );}}
 
-	private PlayerDataModel			_playerDataModel;
-	private StyleModel				_styleModel;
+	private StyleModel			_styleModel;
 	#endregion
 }
 

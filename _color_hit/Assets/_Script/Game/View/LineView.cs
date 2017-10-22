@@ -24,15 +24,21 @@ public class LineView : View
 
 	void Start()
 	{
-		Line.SetVertexCount(0);
+		ResetLine ();
 	}
 
 	#region public methods
 	public void StartDraw()
 	{
-		Line.SetVertexCount(0);
-		LineCollider.Reset ();
+		ResetLine ();
 		LineCollider.enabled = true;
+	}
+
+	public void ResetLine()
+	{	
+		Line.SetVertexCount(0);
+		LineCollider.enabled = false;
+		LineCollider.Reset ();
 		DOTween.Kill (_lineTweenId);
 	}
 
@@ -208,5 +214,6 @@ public class LineView : View
 		.SetEase(Ease.Linear)
 		.SetId(_lineTweenId);
 	}
+
 }
 

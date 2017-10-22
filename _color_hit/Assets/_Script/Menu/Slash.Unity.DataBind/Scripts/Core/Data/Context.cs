@@ -18,7 +18,7 @@ namespace Slash.Unity.DataBind.Core.Data
     /// <summary>
     ///   Base class for a data context which contains properties to bind to.
     /// </summary>
-    public abstract class Context
+	public abstract class Context
     {
         #region Constants
 

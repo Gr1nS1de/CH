@@ -5,7 +5,7 @@ using DG.Tweening;
 
 public class PlayerDataController : Controller
 {
-	private PlayerDataModel 				_playerDataModel	{ get { return core.playerDataModel;}}
+	private PlayerData 				_playerData	{ get { return core.playerData;}}
 
 	public override void OnNotification( string alias, Object target, params object[] data )
 	{
@@ -13,7 +13,7 @@ public class PlayerDataController : Controller
 		{
 			case N.GameStart:
 				{
-					_playerDataModel.currentScore = 0;
+					_playerData.currentScore = 0;
 					break;
 				}
 
@@ -23,11 +23,13 @@ public class PlayerDataController : Controller
 
 	void Awake()
 	{
-		_playerDataModel.playerRecord = Prefs.PlayerData.GetRecord ();
-		_playerDataModel.coinsCount = Prefs.PlayerData.GetCoinsCount ();
-		_playerDataModel.crystalsCount = Prefs.PlayerData.GetCrystalsCount ();
-		_playerDataModel.isDoubleCoin = Prefs.PlayerData.GetDoubleCoin () == 1;
-		_playerDataModel.playedGamesCount = Prefs.PlayerData.GetPlayedGamesCount();
+		core.playerData = new PlayerData ()
+		{	
+			playerRecord = Prefs.PlayerData.GetRecord (),
+			starsCount = Prefs.PlayerData.GetStarsCount (),
+			isDoubleCoin = Prefs.PlayerData.GetDoubleCoin () == 1,
+			playedGamesCount = Prefs.PlayerData.GetPlayedGamesCount(),
+		};
 	}
 
 	/*

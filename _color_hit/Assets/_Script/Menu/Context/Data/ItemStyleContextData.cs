@@ -44,6 +44,13 @@ public class ItemStyleContextData : Context
 		set { this.isSelectedProperty.Value = value; }
 	}
 
+	private readonly Property<bool> isInteractableProperty = new Property<bool>();
+	public bool IsInteractable
+	{
+		get { return this.isInteractableProperty.Value; }
+		set { this.isInteractableProperty.Value = value; }
+	}
+
 	private readonly Property<string> textCompleteStatsProperty = new Property<string>();
 	public string TextCompleteStats
 	{
@@ -55,6 +62,7 @@ public class ItemStyleContextData : Context
 
 	public ItemStyleContextData()
 	{
+		IsInteractable = true;
 	}
 
 	public void OnClickItem(StyleId styleId)

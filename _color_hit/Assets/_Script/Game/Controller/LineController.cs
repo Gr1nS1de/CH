@@ -13,6 +13,12 @@ public class LineController : Controller
 	{
 		switch (alias)
 		{
+			case N.RetryLevel:
+				{
+					_lineView.ResetLine ();
+					break;
+				}
+
 			case N.DragInput____:
 				{
 					GameObject selectedGameObject = (GameObject)data [0];
