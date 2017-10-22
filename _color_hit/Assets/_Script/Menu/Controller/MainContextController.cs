@@ -25,7 +25,9 @@ public class MainContextController : Controller
 				{
 					StyleId styleId = (StyleId)data [0];
 
-					if (styleId == GM.Instance.CurrentStyle)
+					Debug.LogFormat ("SelectStyleInput. styleId: {0}. current style: {1}", styleId, GM.Instance.CurrentStyleId);
+
+					if (styleId == GM.Instance.CurrentStyleId)
 					{
 						GoToState (ContextType.SelectLevelContext);
 					}
@@ -45,6 +47,7 @@ public class MainContextController : Controller
 
 	public void GoToState( ContextType state)
 	{
+		Debug.LogFormat("GoToState. State: {0}. Current state: {1}", state, CurrentState);
 		UnloadState();
 
 		switch ( state )

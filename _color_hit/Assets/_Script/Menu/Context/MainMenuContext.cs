@@ -10,8 +10,8 @@ public class MainMenuContext : BaseContext
 	}
 
 
-	private readonly Collection<ItemStyleData> itemsStyle = new Collection<ItemStyleData>();
-	public Collection<ItemStyleData> ItemsStyle
+	private readonly Collection<ItemStyleContextData> itemsStyle = new Collection<ItemStyleContextData>();
+	public Collection<ItemStyleContextData> ItemsStyle
 	{
 		get
 		{ return this.itemsStyle; }

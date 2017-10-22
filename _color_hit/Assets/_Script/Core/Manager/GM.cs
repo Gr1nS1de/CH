@@ -10,7 +10,7 @@ public class GM : Controller
 
 	private const string 		LeaderBoardPrivate = "http://dreamlo.com/lb/HmyLFso9EUmOvvnmRzgKsw1og-BQzKSU-1t0Vk36HwIg";
 
-	public StyleId 				CurrentStyle = StyleId.OrangeWhite;
+	public StyleId 				CurrentStyleId = StyleId.OrangeWhite;
 	[HideInInspector]
 	public Vector2 				ScreenSize;
 	public bool 				IsLoggsEnabled = true;
@@ -53,7 +53,7 @@ public class GM : Controller
 
 	void Start()
 	{		
-		SetStyle(CurrentStyle);
+		SetStyle(CurrentStyleId);
 	}
 		
 	public override void OnNotification (string alias, Object target, params object[] data)
@@ -79,7 +79,7 @@ public class GM : Controller
 				{
 					StyleId styleId = (StyleId)data [0];
 
-					if (CurrentStyle != styleId)
+					if (CurrentStyleId != styleId)
 					{
 						SetStyle (styleId);
 					}
@@ -94,7 +94,7 @@ public class GM : Controller
 		StyleData styleData = core.styleModel.GetStyleData(styleId);
 
 
-		CurrentStyle = styleId;
+		CurrentStyleId = styleId;
 
 		Notify (N.SetStyle_, NotifyType.ALL, styleData);
 	}

@@ -9,4 +9,11 @@ public class SelectLevelContext : BaseContext
 	{
 		get { return ContextType.SelectLevelContext; }
 	}
+
+	private readonly Collection<ItemSelectContextData> itemsSelect = new Collection<ItemSelectContextData>();
+	public Collection<ItemSelectContextData> ItemsSelect
+	{
+		get
+		{ return this.itemsSelect; }
+	}
 }

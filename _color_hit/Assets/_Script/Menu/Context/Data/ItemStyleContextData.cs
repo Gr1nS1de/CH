@@ -4,7 +4,7 @@ using Slash.Unity.DataBind.Core.Data;
 using DG.Tweening;
 using System;
 
-public class ItemStyleData : Context
+public class ItemStyleContextData : Context
 {
 	public static Vector3 STYLE_ITEM_INIT_SCALE = new Vector3 (0.6f, 0.6f, 1f);
 	public event Action<StyleId> ActionClickStyle;
@@ -53,7 +53,7 @@ public class ItemStyleData : Context
 
 	public float PositionPercantage;
 
-	public ItemStyleData()
+	public ItemStyleContextData()
 	{
 	}
 

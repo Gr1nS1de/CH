@@ -65,5 +65,10 @@ public class StyleModel : Model
 	{
 		return StylesSettings.StylesDataList.Find (sData => sData.styleId == styleId);
 	}
+
+	public StyleData GetCurrentStyleData()
+	{
+		return GetStyleData (GM.Instance.CurrentStyleId);
+	}
 }
 
