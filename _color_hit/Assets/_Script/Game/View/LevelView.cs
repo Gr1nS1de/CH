@@ -8,6 +8,11 @@ public class LevelView : MonoBehaviour
 	public List<Transform> StepsList;
 	public int LevelIndex;
 
+	#if UNITY_EDITOR
+	public bool IsFirstStepEnabled = false;
+	public bool IsSecondStepEnabled = false;
+	#endif
+
 	void OnEnable()
 	{
 		LevelIndex = transform.GetSiblingIndex ();
@@ -25,5 +30,20 @@ public class LevelView : MonoBehaviour
 			}
 		}
 	}
+
+	#if UNITY_EDITOR
+	void Update()
+	{
+		if (IsFirstStepEnabled != StepsList [0].gameObject.activeSelf)
+		{
+			StepsList [0].gameObject.SetActive (IsFirstStepEnabled);
+		}
+
+		if (IsSecondStepEnabled != StepsList [1].gameObject.activeSelf)
+		{
+			StepsList [1].gameObject.SetActive (IsSecondStepEnabled);
+		}
+	}
+	#endif
 }
 

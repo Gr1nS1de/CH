@@ -37,6 +37,8 @@ public class SelectLevelContextController : Controller
 		bool isInit = styleData == null;
 		styleData = isInit? currentStyleData : styleData;
 
+		SelectLevelContext.CompletedLevelsText = string.Format ("{0}/{1}", 0, styleData.levelsCount);
+
 		UnregisterItemsSelectClick ();
 
 		SelectLevelContext.ItemsSelect.Clear ();

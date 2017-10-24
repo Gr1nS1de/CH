@@ -10,6 +10,13 @@ public class SelectLevelContext : BaseContext
 		get { return ContextType.SelectLevelContext; }
 	}
 
+	private readonly Property<string> completedLevelsTextProperty = new Property<string>();
+	public string CompletedLevelsText
+	{
+		get { return this.completedLevelsTextProperty.Value; }
+		set { this.completedLevelsTextProperty.Value = value; }
+	}
+
 	private readonly Collection<ItemSelectContextData> itemsSelect = new Collection<ItemSelectContextData>();
 	public Collection<ItemSelectContextData> ItemsSelect
 	{

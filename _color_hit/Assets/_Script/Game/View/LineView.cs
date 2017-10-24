@@ -176,9 +176,10 @@ public class LineView : View
 		
 	public override void OnRendererTriggerEnter (ViewTriggerDetect triggerDetector, Collider2D otherCollider)
 	{
-		//Debug.LogErrorFormat ("OnRendererTriggerEnter ");
-		ObstacleModel.ObstacleCollisionType obstacleType = Utils.GetObstacleCollisionType(otherCollider.gameObject.layer);
+		if (_pointsList.Count == 0)
+			return;
 
+		ObstacleModel.ObstacleCollisionType obstacleType = Utils.GetObstacleCollisionType(otherCollider.gameObject.layer);
 		ObstacleView obstacleView = otherCollider.GetComponentInParent<ObstacleView> ();
 
 		if (obstacleView == null)
