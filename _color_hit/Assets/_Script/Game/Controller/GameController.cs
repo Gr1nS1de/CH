@@ -67,7 +67,14 @@ public class GameController : Controller
 							{
 								if (!game.model.obstacleModel.isActivePointObstacle)
 								{
-									Notify (N.FinishLevel);
+									int currentStep = game.model.levelModel.CurrentStep;
+
+									game.model.levelModel.CurrentStep = game.model.levelModel.CurrentStep + 1 >= core.styleModel.GetCurrentStyleData ().stepsCount ? 0 : game.model.levelModel.CurrentStep + 1;
+
+									DOVirtual.DelayedCall(1f, ()=>
+									{
+										Notify (N.FinishStep_, NotifyType.GAME, currentStep);
+									});
 								}
 								break;
 							}

@@ -22,7 +22,7 @@ public class LineView : View
 
 	private LineModel 		_lineModel { get { return game.model.lineModel;}}
 
-	void Start()
+	void OnEnable()
 	{
 		ResetLine ();
 	}

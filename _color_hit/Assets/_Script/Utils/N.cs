@@ -8,7 +8,7 @@ public class N : MonoBehaviour
 	public const string OnDoubleTapInput			= "on.double.tap.input";
 	public const string SetStyle__					= "set.style";
 	public const string StartLevel__ 				= "start.level";
-	public const string FinishLevel 				= "finish.level";
+	public const string FinishStep_ 					= "finish.step";
 	public const string RetryLevel 					= "retry.level";
 
 	#region Services notifications

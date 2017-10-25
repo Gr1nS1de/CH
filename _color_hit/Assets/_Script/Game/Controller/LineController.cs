@@ -13,7 +13,7 @@ public class LineController : Controller
 	{
 		switch (alias)
 		{
-			case N.FinishLevel:
+			case N.FinishStep_:
 				{
 					_lineView.ResetLine ();
 					break;

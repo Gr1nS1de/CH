@@ -102,15 +102,16 @@ public class GM : Controller
 					break;
 				}
 
-			case N.FinishLevel:
+			case N.FinishStep_:
 				{
+					int currentStep = (int)data [0];
 					LevelView currentLevelView = game.model.levelModel.CurrentLevel;
-					int currentStep = game.model.levelModel.CurrentStep;
 					StyleData currentStyleData = game.m_Core.styleModel.GetCurrentStyleData ();
-					LevelView levelView =currentStyleData.stepsCount >= currentStep + 1 ? game.view.GetLevelView (currentLevelView.LevelIndex + 1) : currentLevelView;
-					int step = currentStyleData.stepsCount >= currentStep + 1 ? 0 : currentStep + 1;
+					LevelView levelView =currentStep + 1 >= currentStyleData.stepsCount ? game.view.GetLevelView (currentLevelView.LevelIndex + 1) : currentLevelView;
+					int step = currentStep + 1 >= currentStyleData.stepsCount ? 0 : currentStep + 1;
 
 					Notify (N.StartLevel__, NotifyType.ALL, levelView, step);
+
 					break;
 				}
 		}
