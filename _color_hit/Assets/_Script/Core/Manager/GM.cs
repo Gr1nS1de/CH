@@ -10,6 +10,8 @@ public class GM : Controller
 
 	private const string 		LeaderBoardPrivate = "http://dreamlo.com/lb/HmyLFso9EUmOvvnmRzgKsw1og-BQzKSU-1t0Vk36HwIg";
 
+	public bool IsGameStared = false;
+	public GameState GameState { get; private set;}
 	public StyleId 				CurrentStyleId = StyleId.OrangeWhite;
 	[HideInInspector]
 	public Vector2 				ScreenSize;
@@ -19,6 +21,8 @@ public class GM : Controller
 
 	void Awake()
 	{
+		IsGameStared = true;
+
 		if (Instance == null)
 		{
 			Instance = this;
@@ -60,7 +64,7 @@ public class GM : Controller
 	{
 		switch (alias)
 		{
-			case N.GameOver_:
+			case N.GameOver:
 				{
 					/*
 					GameOverData gameOverData = (GameOverData)data[0];
@@ -90,10 +94,23 @@ public class GM : Controller
 				{
 					int level = (int)data [0];
 					int step = (int)data [1];
+					LevelView levelView = game.view.GetLevelView (level);
 
-					GoToState (GameState.Playing);
+					GoToState (GameState.Play);
 
-					Notify (N.StartLevel__, NotifyType.ALL, level, step);
+					Notify (N.StartLevel__, NotifyType.ALL, levelView, step);
+					break;
+				}
+
+			case N.FinishLevel:
+				{
+					LevelView currentLevelView = game.model.levelModel.CurrentLevel;
+					int currentStep = game.model.levelModel.CurrentStep;
+					StyleData currentStyleData = game.m_Core.styleModel.GetCurrentStyleData ();
+					LevelView levelView =currentStyleData.stepsCount >= currentStep + 1 ? game.view.GetLevelView (currentLevelView.LevelIndex + 1) : currentLevelView;
+					int step = currentStyleData.stepsCount >= currentStep + 1 ? 0 : currentStep + 1;
+
+					Notify (N.StartLevel__, NotifyType.ALL, levelView, step);
 					break;
 				}
 		}
@@ -110,12 +127,14 @@ public class GM : Controller
 					break;
 				}
 
-			case GameState.Playing:
+			case GameState.Play:
 				{
 					ui.controller.MainContextController.MainContext.IsShowMainMenu = false;
 					break;
 				}
 		}
+
+		GameState = state;
 	}
 
 	private void SetStyle(StyleId styleId, bool isInit)

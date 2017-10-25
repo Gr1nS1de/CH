@@ -34,4 +34,19 @@ public class GameView : View
 	{
 		return GetStyleView (GM.Instance.CurrentStyleId);
 	}
+
+	public LevelView GetLevelView(int levelIndex)
+	{
+		return GetCurrentStyleView ().LevelsList.Find (lView => lView.LevelIndex == levelIndex);
+	}
+
+	public LevelView GetCurrentLevelView()
+	{
+		return GetLevelView(game.model.levelModel.CurrentLevel.LevelIndex);
+	}
+
+	public LineRenderer GetCurrentLineRenderer()
+	{
+		return GetCurrentLevelView ().StepsList [game.model.levelModel.CurrentStep].GetComponentInChildren<LineRenderer> ();
+	}
 }

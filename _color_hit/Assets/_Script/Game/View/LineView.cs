@@ -28,8 +28,9 @@ public class LineView : View
 	}
 
 	#region public methods
-	public void StartDraw()
+	public void StartDraw(LineRenderer lineRenderer)
 	{
+		Line = lineRenderer;
 		ResetLine ();
 		LineCollider.enabled = true;
 	}

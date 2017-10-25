@@ -6,13 +6,12 @@ public class N : MonoBehaviour
 	#region Core notifications
 	public const string DragInput____				= "drag.input";
 	public const string OnDoubleTapInput			= "on.double.tap.input";
-	public const string SelectStyle_				= "select.style";
 	public const string SetStyle__					= "set.style";
-	public const string SelectLevel__ 				= "select.level";
 	public const string StartLevel__ 				= "start.level";
-	public const string RetryLevel 				= "retry.level";
+	public const string FinishLevel 				= "finish.level";
+	public const string RetryLevel 					= "retry.level";
 
-	#region Game Services notifications
+	#region Services notifications
 	public const string OnGameServicesConnected_	= "on.game.services.connected";
 
 	#region Purchase notifications
@@ -29,10 +28,9 @@ public class N : MonoBehaviour
 
 	#region Game notifications
 	public const string GameStart					= "game.start";
-	public const string GamePlay					= "game.play";
 	public const string GamePause					= "game.pause";
 	public const string GameContinue				= "game.continue";
-	public const string GameOver_					= "game.over";
+	public const string GameOver					= "game.over";
 	public const string GameAddScore				= "game.add.score";
 
 	#region player notifications
@@ -44,6 +42,9 @@ public class N : MonoBehaviour
 	#endregion
 
 	#region Menu notifications
+	public const string SelectStyle_				= "select.style";
+	public const string SelectLevel__ 				= "select.level";
+
 	public const string UIThemeChanged_				= "ui.theme.changed";
 	public const string UIWindowStateChanged_		= "ui.window.state.changed";
 	public const string OnCenterButtonPressed_ 		= "on.center.button.pressed";

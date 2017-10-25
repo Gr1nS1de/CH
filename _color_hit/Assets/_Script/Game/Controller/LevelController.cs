@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class LevelController : Controller
 {
+	private LevelModel _levelModel {get {return game.model.levelModel;}}
 
 	public override void OnNotification (string alias, Object target, params object[] data)
 	{
@@ -11,10 +12,13 @@ public class LevelController : Controller
 		{
 			case N.StartLevel__:
 				{
-					int level = (int)data [0];
+					LevelView levelView =  (LevelView)data [0];
 					int step = (int)data [1];
 
-					ActivateLevel (level, step);
+					_levelModel.CurrentLevel = levelView;
+					_levelModel.CurrentStep = step;
+
+					ActivateLevel (levelView, step);
 					break;
 				}
 
@@ -37,35 +41,28 @@ public class LevelController : Controller
 		});
 	}
 
-	private void ActivateLevel(int level, int step)
+	private void ActivateLevel(LevelView levelView, int step )
 	{
-		Debug.LogFormat ("ActivateLevel. level: {0}. step: {1}", level, step);
+		Debug.LogFormat ("ActivateLevel. level: {0}. step: {1}", levelView.LevelIndex + 1, step);
 
-		List<StyleView> stylesViewsList = game.view.StylesViewList;
+		StyleView currentStyleView = game.view.GetCurrentStyleView ();
 
-		stylesViewsList.ForEach (styleView =>
+		for(int i = 0; i< currentStyleView.LevelsList.Count; i++)
 		{
-			for(int i = 0; i< styleView.LevelsList.Count; i++)
+			LevelView level = currentStyleView.LevelsList[i];
+
+			for(int s = 0; s < level.StepsList.Count; s++)
 			{
-				LevelView levelView = styleView.LevelsList[i];
+				Transform stepTransform = level.StepsList[s];
 
-				if(level == i)
+				if(level.Equals(levelView))
 				{
-					for(int s = 0; s < levelView.StepsList.Count; s++)
-					{
-						Transform stepTransform = levelView.StepsList[s];
-
-						stepTransform.gameObject.SetActive(s == step);
-					}
-				}
-				else{
-					levelView.StepsList.ForEach(stepTransform=>
-					{
-						stepTransform.gameObject.SetActive(false);
-					});
+					stepTransform.gameObject.SetActive(s == step);
+				}else{
+					stepTransform.gameObject.SetActive(false);
 				}
 			}
-		});
+		}
 	}
 }
 

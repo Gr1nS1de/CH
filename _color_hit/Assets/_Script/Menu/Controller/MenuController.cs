@@ -41,7 +41,7 @@ public class MenuController : Controller
 					break;
 				}
 
-			case N.GameOver_:
+			case N.GameOver:
 				{
 
 					break;

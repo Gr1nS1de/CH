@@ -1,19 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LevelModel : MonoBehaviour
+public class LevelModel : Model
 {
-
-	// Use this for initialization
-	void Start ()
-	{
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-	
-	}
+	public LevelView CurrentLevel = null;
+	public int CurrentStep;
 }
 

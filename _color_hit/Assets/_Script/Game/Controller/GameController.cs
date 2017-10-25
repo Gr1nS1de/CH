@@ -49,6 +49,9 @@ public class GameController : Controller
 					ObstacleModel.ObstacleCollisionType collisionType = (ObstacleModel.ObstacleCollisionType)data [0];
 					Vector3 currentPosition = (Vector3)data [1];
 					ObstacleView obstacleView = (ObstacleView)data [2];
+					LevelView currentLevel = game.model.levelModel.CurrentLevel;
+
+					obstacleView.IsTriggered = true;
 
 					Debug.LogFormat ("Line impact {0} at {1}", collisionType, currentPosition);
 
@@ -56,19 +59,23 @@ public class GameController : Controller
 					{
 						case ObstacleModel.ObstacleCollisionType.Die:
 							{
-								Notify (N.GameOver_);
+								Notify (N.GameOver);
 								break;
 							}
 
 						case ObstacleModel.ObstacleCollisionType.Point:
 							{
+								if (!game.model.obstacleModel.isActivePointObstacle)
+								{
+									Notify (N.FinishLevel);
+								}
 								break;
 							}
 					}
 					break;
 				}
 
-			case N.GameOver_:
+			case N.GameOver:
 				{
 					_gameView.GetCurrentStyleView().transform.parent.gameObject.SetActive(false);
 					_gameView.GetCurrentStyleView().transform.parent.gameObject.SetActive(true);

@@ -12,7 +12,7 @@ public class InGameMenuContextController : Controller
 		{
 			case N.StartLevel__:
 				{
-					int level = (int)data [0];
+					LevelView levelView =  (LevelView)data [0];
 					int step = (int)data [1];
 
 					_inGameContext.GoToState (InGameMenuState.Game);

@@ -1,18 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ObstaclesController : Controller
 {
+	private LevelView _currentLevelView = null;
+	private ObstacleModel _obstacleModel {get { return game.model.obstacleModel;}}
+
 	public override void OnNotification( string alias, Object target, params object[] data )
 	{
 		switch (alias)
 		{
 			case N.StartLevel__:
 				{
-					int level = (int)data [0];
+					LevelView levelView =  (LevelView)data [0];
 					int step = (int)data [1];
 
-					LevelView levelView = game.view.GetCurrentStyleView().LevelsList.Find(lView=>lView.LevelIndex == level);
+					_obstacleModel.InitObstaclesList (levelView, step);
 					break;
 				}
 

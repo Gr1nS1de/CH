@@ -13,6 +13,12 @@ public class LineController : Controller
 	{
 		switch (alias)
 		{
+			case N.FinishLevel:
+				{
+					_lineView.ResetLine ();
+					break;
+				}
+
 			case N.RetryLevel:
 				{
 					_lineView.ResetLine ();
@@ -31,7 +37,7 @@ public class LineController : Controller
 						case ContinuousGesturePhase.Started:
 							{
 								
-								_lineView.StartDraw();
+								_lineView.StartDraw(game.view.GetCurrentLineRenderer());
 								_lineModel.StartDraw ();
 								break;
 							}

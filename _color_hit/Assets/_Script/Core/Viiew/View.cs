@@ -12,6 +12,7 @@ public abstract class View : Element
 {
 	public GameApplication 	game 	{ get { return (GameApplication)m_Game; } }
 	public MenuApplication 	ui		{ get { return (MenuApplication)m_UI; } }
+	public Core core				{ get { return (Core)m_Core; } }
 
 	public virtual void OnRendererCollisionEnter(ViewCollisionDetect collisionDetector, Collision2D collision)
 	{

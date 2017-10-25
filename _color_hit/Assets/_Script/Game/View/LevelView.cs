@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 [ExecuteInEditMode]
-public class LevelView : MonoBehaviour
+public class LevelView : View
 {
 	public List<Transform> StepsList;
 	public int LevelIndex;
@@ -34,15 +34,19 @@ public class LevelView : MonoBehaviour
 	#if UNITY_EDITOR
 	void Update()
 	{
-		if (IsFirstStepEnabled != StepsList [0].gameObject.activeSelf)
-		{
-			StepsList [0].gameObject.SetActive (IsFirstStepEnabled);
-		}
+		if (GM.Instance != null)
+			return;
+		
+			if (IsFirstStepEnabled != StepsList [0].gameObject.activeSelf)
+			{
+				StepsList [0].gameObject.SetActive (IsFirstStepEnabled);
+			}
 
-		if (IsSecondStepEnabled != StepsList [1].gameObject.activeSelf)
-		{
-			StepsList [1].gameObject.SetActive (IsSecondStepEnabled);
-		}
+			if (IsSecondStepEnabled != StepsList [1].gameObject.activeSelf)
+			{
+				StepsList [1].gameObject.SetActive (IsSecondStepEnabled);
+			}
+
 	}
 	#endif
 }

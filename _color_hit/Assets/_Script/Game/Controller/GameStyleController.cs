@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class StyleController : Controller
+public class GameStyleController : Controller
 {
 	private StyleModel _styleModel {get { return core.styleModel;}}
 	
