@@ -13,6 +13,16 @@ public class LineController : Controller
 	{
 		switch (alias)
 		{
+			case N.StartLevel__:
+				{
+					LevelView levelView =  (LevelView)data [0];
+					int step = (int)data [1];
+
+
+					_lineView.ResetLine ();
+					break;
+				}
+
 			case N.FinishStep_:
 				{
 					_lineView.ResetLine ();
@@ -27,6 +37,11 @@ public class LineController : Controller
 
 			case N.DragInput____:
 				{
+					if (GM.Instance.GameState != GameState.Play)
+					{
+						return;
+					}
+
 					GameObject selectedGameObject = (GameObject)data [0];
 					Vector3 currentPosition = (Vector3)data [1];
 					Vector2 deltaPosition = (Vector2)data [2];
@@ -37,7 +52,7 @@ public class LineController : Controller
 						case ContinuousGesturePhase.Started:
 							{
 								
-								_lineView.StartDraw(game.view.GetCurrentLineRenderer());
+								_lineView.StartDraw();
 								_lineModel.StartDraw ();
 								break;
 							}
@@ -69,7 +84,7 @@ public class LineController : Controller
 					break;
 				}
 
-			case N.LineImpactObstacle___:
+			case N.ImpactObstacle___:
 				{
 					ObstacleModel.ObstacleCollisionType collisionType = (ObstacleModel.ObstacleCollisionType)data [0];
 					Vector3 currentPosition = (Vector3)data [1];
@@ -99,6 +114,14 @@ public class LineController : Controller
 					break;
 				}
 		}
+	}
+
+
+	public void ObstacleImpact(ObstacleModel.ObstacleCollisionType collisionType, Vector3 currentPosition, ObstacleView obstacleView)
+	{
+		obstacleView.IsTriggered = true;
+
+		Notify (N.ImpactObstacle___, NotifyType.GAME, collisionType, currentPosition, obstacleView);
 	}
 		
 }

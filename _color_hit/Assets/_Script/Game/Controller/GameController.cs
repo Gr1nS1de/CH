@@ -6,6 +6,10 @@ using DG.Tweening;
 
 public class GameController : Controller
 {
+	public LineController				lineController				{ get { return _lineController			= SearchLocal(			_lineController,				typeof(LineController).Name );}}
+
+	private LineController				_lineController;
+
 	/*
 	#region Declare controllers reference
 	//public CameraController					cameraController				{ get { return _cameraController 			= SearchLocal<CameraController>(			_cameraController,				typeof(CameraController).Name ); } }
@@ -44,14 +48,12 @@ public class GameController : Controller
 		switch ( alias )
 		{
 
-			case N.LineImpactObstacle___:
+			case N.ImpactObstacle___:
 				{
 					ObstacleModel.ObstacleCollisionType collisionType = (ObstacleModel.ObstacleCollisionType)data [0];
 					Vector3 currentPosition = (Vector3)data [1];
 					ObstacleView obstacleView = (ObstacleView)data [2];
 					LevelView currentLevel = game.model.levelModel.CurrentLevel;
-
-					obstacleView.IsTriggered = true;
 
 					Debug.LogFormat ("Line impact {0} at {1}", collisionType, currentPosition);
 

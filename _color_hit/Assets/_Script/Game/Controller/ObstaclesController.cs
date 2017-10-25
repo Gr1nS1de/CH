@@ -20,7 +20,7 @@ public class ObstaclesController : Controller
 					break;
 				}
 
-			case N.LineImpactObstacle___:
+			case N.ImpactObstacle___:
 				{
 					if (game.model.lineModel.isDraw)
 					{

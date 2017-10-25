@@ -6,9 +6,9 @@ using DG.Tweening;
 
 public class LineView : View
 {
-	public LineRenderer Line;
 	public EdgeCollider2D LineCollider;
 
+	private LineRenderer 	_lineRenderer { get { return game.view.GetCurrentLineRenderer (); } }
 	private List<Vector3> 	_pointsList { get { return _lineModel.pointsList; } }
 	private List<Vector2> 	_colliderList { get { return _lineModel.colliderList; } }
 	private float 			_vertexSmooth = 0.5f;
@@ -22,22 +22,16 @@ public class LineView : View
 
 	private LineModel 		_lineModel { get { return game.model.lineModel;}}
 
-	void OnEnable()
-	{
-		ResetLine ();
-	}
-
 	#region public methods
-	public void StartDraw(LineRenderer lineRenderer)
+	public void StartDraw()
 	{
-		Line = lineRenderer;
 		ResetLine ();
 		LineCollider.enabled = true;
 	}
 
 	public void ResetLine()
 	{	
-		Line.SetVertexCount(0);
+		_lineRenderer.SetVertexCount(0);
 		LineCollider.enabled = false;
 		LineCollider.Reset ();
 		DOTween.Kill (_lineTweenId);
@@ -51,7 +45,7 @@ public class LineView : View
 
 			_pointsList.Add (pos);
 
-			Line.SetVertexCount (_pointsList.Count);
+			_lineRenderer.SetVertexCount (_pointsList.Count);
 
 			Vector3 addPoint;
 
@@ -66,7 +60,7 @@ public class LineView : View
 				addPoint = _pointsList [_pointsList.Count - 1];
 			}
 
-			Line.SetPosition (_pointsList.Count - 1, addPoint);
+			_lineRenderer.SetPosition (_pointsList.Count - 1, addPoint);
 
 			// If collidable also set vertex positions
 			if(LineCollider != null)
@@ -100,15 +94,15 @@ public class LineView : View
 		_punchExpandLineSequence
 			.Append(DOTween.To (() => 0.05f, width =>
 				{
-					Line.startWidth = width;
-					Line.endWidth = width;
+					_lineRenderer.startWidth = width;
+					_lineRenderer.endWidth = width;
 				}, 0.1f, 0.15f)
 				.SetEase(Ease.Flash)
 			)
 			.Append(DOTween.To (() => 0.1f, width =>
 				{
-					Line.startWidth = width;
-					Line.endWidth = width;
+					_lineRenderer.startWidth = width;
+					_lineRenderer.endWidth = width;
 				}, 0.05f, 0.1f)
 				.SetEase(Ease.Linear)
 			)
@@ -122,9 +116,9 @@ public class LineView : View
 		_duplicateLineTween.Kill ();
 
 		_collapseLineToStartTween = 
-			DOTween.To (() => Line.positionCount-1, pointIndex =>
+			DOTween.To (() => _lineRenderer.positionCount-1, pointIndex =>
 			{
-				Line.SetVertexCount(pointIndex);
+				_lineRenderer.SetVertexCount(pointIndex);
 
 			}, 0, _lineModel.lineDrawTimeLength).SetEase(Ease.Linear)
 			.OnStart(()=>
@@ -143,22 +137,22 @@ public class LineView : View
 		_duplicateLineTween.Kill ();
 
 		_lastIndex = -1;
-		int linesPointsCount = Line.positionCount - 1;
+		int linesPointsCount = _lineRenderer.positionCount - 1;
 
 		_collapseLineToEndTween = 
 			DOTween.To (() =>linesPointsCount, pointIndex =>
 			{
 				if(_lastIndex == -1 ||_lastIndex - pointIndex > 0)
 				{
-					Vector3[] linePositions = new Vector3[Line.positionCount];	
-					Line.GetPositions (linePositions);
+					Vector3[] linePositions = new Vector3[_lineRenderer.positionCount];	
+					_lineRenderer.GetPositions (linePositions);
 					var linePositionsList = linePositions.ToList();
 					int removeRange = _lastIndex == -1 ? 1 : _lastIndex - pointIndex;
 
 					linePositionsList.RemoveRange(0, _lastIndex == -1 ? linePositionsList.Count - pointIndex : _lastIndex - pointIndex);
 
-					Line.positionCount = linePositionsList.Count;
-					Line.SetPositions(linePositionsList.ToArray());
+					_lineRenderer.positionCount = linePositionsList.Count;
+					_lineRenderer.SetPositions(linePositionsList.ToArray());
 
 					_lastIndex = pointIndex;
 				}
@@ -180,7 +174,7 @@ public class LineView : View
 		if (_pointsList.Count == 0)
 			return;
 
-		ObstacleModel.ObstacleCollisionType obstacleType = Utils.GetObstacleCollisionType(otherCollider.gameObject.layer);
+		ObstacleModel.ObstacleCollisionType obstacleCollisionType = Utils.GetObstacleCollisionType(otherCollider.gameObject.layer);
 		ObstacleView obstacleView = otherCollider.GetComponentInParent<ObstacleView> ();
 
 		if (obstacleView == null)
@@ -189,7 +183,7 @@ public class LineView : View
 			return;
 		}
 
-		Notify (N.LineImpactObstacle___, NotifyType.GAME, obstacleType, _pointsList[_pointsList.Count-1], obstacleView);
+		game.controller.lineController.ObstacleImpact(obstacleCollisionType, _pointsList[_pointsList.Count-1], obstacleView);
 	}
 		
 	#endregion

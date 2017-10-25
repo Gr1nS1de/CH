@@ -98,6 +98,8 @@ public class GM : Controller
 
 					GoToState (GameState.Play);
 
+					game.model.levelModel.InitCurrentLevel (levelView, step);
+
 					Notify (N.StartLevel__, NotifyType.ALL, levelView, step);
 					break;
 				}

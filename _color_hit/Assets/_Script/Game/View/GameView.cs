@@ -47,6 +47,6 @@ public class GameView : View
 
 	public LineRenderer GetCurrentLineRenderer()
 	{
-		return GetCurrentLevelView ().StepsList [game.model.levelModel.CurrentStep].GetComponentInChildren<LineRenderer> ();
+		return GetCurrentLevelView ().StepsList [game.model.levelModel.CurrentStep].GetComponentInChildren<LineRenderer> (true);
 	}
 }
