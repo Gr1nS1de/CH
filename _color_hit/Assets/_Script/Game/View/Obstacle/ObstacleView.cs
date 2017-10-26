@@ -8,7 +8,7 @@ public abstract class ObstacleView : View
 	public bool IsTriggered = false;
 
 	#region public methods
-	public abstract void Collision();
+	public abstract void Impact();
 	public abstract void Init();
 	#endregion
 

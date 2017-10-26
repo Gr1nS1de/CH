@@ -62,11 +62,10 @@ public class ObstacleOrangeWhiteView : ObstacleView
 	#region public methods
 	public override void Init ()
 	{
-		_collisionSequence.Complete ();
 		_collisionSequence.SmoothRewind ();
 	}
 
-	public override void Collision ()
+	public override void Impact ()
 	{
 		_collisionSequence.Play ();
 	}

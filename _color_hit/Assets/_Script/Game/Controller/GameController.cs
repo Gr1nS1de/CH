@@ -47,6 +47,25 @@ public class GameController : Controller
 	{
 		switch ( alias )
 		{
+			case N.CollisionObstacle___:
+				{
+					ObstacleModel.ObstacleCollisionType collisionType = (ObstacleModel.ObstacleCollisionType)data [0];
+					Vector3 currentPosition = (Vector3)data [1];
+					ObstacleView obstacleView = (ObstacleView)data [2];
+					LevelView currentLevel = game.model.levelModel.CurrentLevel;
+
+					Debug.LogFormat ("Line collision {0} at {1}", collisionType, currentPosition);
+
+					switch (collisionType)
+					{
+						case ObstacleModel.ObstacleCollisionType.Die:
+							{
+								GameOver ();
+								break;
+							}
+					}
+					break;
+				}
 
 			case N.ImpactObstacle___:
 				{
@@ -59,14 +78,9 @@ public class GameController : Controller
 
 					switch (collisionType)
 					{
-						case ObstacleModel.ObstacleCollisionType.Die:
-							{
-								Notify (N.GameOver);
-								break;
-							}
-
 						case ObstacleModel.ObstacleCollisionType.Point:
 							{
+								Debug.LogFormat ("IsActive obstacle: {0}", game.model.obstacleModel.isActivePointObstacle);
 								if (!game.model.obstacleModel.isActivePointObstacle)
 								{
 									int currentStep = game.model.levelModel.CurrentStep;
@@ -75,6 +89,7 @@ public class GameController : Controller
 
 									DOVirtual.DelayedCall(1f, ()=>
 									{
+										Debug.LogFormat("Notify finish step");
 										Notify (N.FinishStep_, NotifyType.GAME, currentStep);
 									});
 								}
@@ -84,28 +99,43 @@ public class GameController : Controller
 					break;
 				}
 
-			case N.GameOver:
+			case N.FinishDrawLine:
 				{
-					_gameView.GetCurrentStyleView().transform.parent.gameObject.SetActive(false);
-					_gameView.GetCurrentStyleView().transform.parent.gameObject.SetActive(true);
-
+					Debug.LogFormat ("Finish draw line: {0}", game.model.obstacleModel.isActivePointObstacle);
+					if (game.model.obstacleModel.isActivePointObstacle)
+					{
+						GameOver ();
+					}
 					break;
 				}
 
 			case N.RetryLevel:
 				{
-					_gameView.GetCurrentStyleView().transform.parent.gameObject.SetActive(false);
-					_gameView.GetCurrentStyleView().transform.parent.gameObject.SetActive(true);
+					GameOver ();
 					break;
 				}
 					
 		}
 	}
+
 		
 	void Start()
 	{
 
 	}
 		
+	private void GameOver()
+	{
+		float delaySecs = 1f;
+		Debug.LogFormat ("GameOver. delay: {0}",delaySecs);
+
+		DOVirtual.DelayedCall (delaySecs, () =>
+		{
+
+			Notify (N.GameOver);
+		});
+
+	}
+
 
 }

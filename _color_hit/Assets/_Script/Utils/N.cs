@@ -33,11 +33,18 @@ public class N : MonoBehaviour
 	public const string GameOver					= "game.over";
 	public const string GameAddScore				= "game.add.score";
 
+	public const string FinishDrawLine 				= "finish.draw.line";
 	#region player notifications
-	//public const string DestructibleBreakEntity___ 	= "destructible.break.entity";
+	/// <summary>
+	/// Any collision line with obstacle 
+	/// </summary>
+	public const string CollisionObstacle___		= "collision.obstacle";
+	/// <summary>
+	/// Proper impact obstacle with duplicate line
+	/// </summary>
 	public const string ImpactObstacle___ 			= "impact.obstacle";
-	public const string PlayerItemCountChange__		= "game.coins.change";
-	public const string PlayerNewRecord_			= "on.player.new.record";
+	public const string PlayerItemCountChange__		= "player.item.count.change";
+	public const string PlayerNewRecord_			= "player.new.record";
 	#endregion
 	#endregion
 

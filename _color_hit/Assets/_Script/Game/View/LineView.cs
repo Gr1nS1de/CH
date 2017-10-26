@@ -183,7 +183,7 @@ public class LineView : View
 			return;
 		}
 
-		game.controller.lineController.ObstacleImpact(obstacleCollisionType, _pointsList[_pointsList.Count-1], obstacleView);
+		Notify (N.CollisionObstacle___, NotifyType.GAME, obstacleCollisionType, _pointsList[_pointsList.Count-1], obstacleView);
 	}
 		
 	#endregion
@@ -206,9 +206,19 @@ public class LineView : View
 		_duplicateLineTween = DOTween.To (()=>0,(pointIndex)=>
 		{
 			DrawPoint (tempPointsList[pointIndex]);
-		}, tempPointsList.Count, _lineModel.lineDrawTimeLength)
+		}, tempPointsList.Count - 1, _lineModel.lineDrawTimeLength)
 		.SetEase(Ease.Linear)
 		.SetId(_lineTweenId);
+
+		_duplicateLineTween
+			.OnComplete (() =>
+			{
+				Notify (N.FinishDrawLine, NotifyType.GAME);
+			})
+			.OnKill (() =>
+			{
+					Debug.LogFormat("Killed duplicate tween");
+			});
 	}
 
 }

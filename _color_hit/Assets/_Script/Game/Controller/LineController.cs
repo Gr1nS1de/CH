@@ -29,7 +29,7 @@ public class LineController : Controller
 					break;
 				}
 
-			case N.RetryLevel:
+			case N.GameOver:
 				{
 					_lineView.ResetLine ();
 					break;
@@ -84,7 +84,7 @@ public class LineController : Controller
 					break;
 				}
 
-			case N.ImpactObstacle___:
+			case N.CollisionObstacle___:
 				{
 					ObstacleModel.ObstacleCollisionType collisionType = (ObstacleModel.ObstacleCollisionType)data [0];
 					Vector3 currentPosition = (Vector3)data [1];
@@ -111,17 +111,10 @@ public class LineController : Controller
 								break;
 							}
 					}
+
 					break;
 				}
 		}
-	}
-
-
-	public void ObstacleImpact(ObstacleModel.ObstacleCollisionType collisionType, Vector3 currentPosition, ObstacleView obstacleView)
-	{
-		obstacleView.IsTriggered = true;
-
-		Notify (N.ImpactObstacle___, NotifyType.GAME, collisionType, currentPosition, obstacleView);
 	}
 		
 }

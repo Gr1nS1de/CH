@@ -22,17 +22,35 @@ public class ObstaclesController : Controller
 
 			case N.ImpactObstacle___:
 				{
-					if (game.model.lineModel.isDraw)
-					{
-						return;
-					}
-
 					ObstacleModel.ObstacleCollisionType collisionType = (ObstacleModel.ObstacleCollisionType)data [0];
 					Vector3 currentPosition = (Vector3)data [1];
 					ObstacleView obstacleView = (ObstacleView)data [2];
 
-					obstacleView.Collision ();
+					obstacleView.Impact ();
 
+					break;
+				}
+
+			case N.CollisionObstacle___:
+				{
+					ObstacleModel.ObstacleCollisionType collisionType = (ObstacleModel.ObstacleCollisionType)data [0];
+					Vector3 currentPosition = (Vector3)data [1];
+					ObstacleView obstacleView = (ObstacleView)data [2];
+					
+					obstacleView.IsTriggered = true;
+
+					if (game.model.lineModel.isDraw)
+						return;
+
+					Notify (N.ImpactObstacle___, NotifyType.GAME, collisionType, currentPosition, obstacleView);
+					break;
+				}
+
+			case N.GameOver:
+				{
+
+					game.view.GetCurrentStyleView().transform.parent.gameObject.SetActive(false);
+					game.view.GetCurrentStyleView().transform.parent.gameObject.SetActive(true);
 					break;
 				}
 

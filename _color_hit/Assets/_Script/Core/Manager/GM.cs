@@ -112,6 +112,8 @@ public class GM : Controller
 					LevelView levelView =currentStep + 1 >= currentStyleData.stepsCount ? game.view.GetLevelView (currentLevelView.LevelIndex + 1) : currentLevelView;
 					int step = currentStep + 1 >= currentStyleData.stepsCount ? 0 : currentStep + 1;
 
+					Debug.LogFormat ("FinishStep. level: {0}. step: {1}", levelView.LevelIndex + 1, step);
+
 					Notify (N.StartLevel__, NotifyType.ALL, levelView, step);
 
 					break;
