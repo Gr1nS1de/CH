@@ -34,6 +34,19 @@ public class MainContextController : Controller
 					}
 					break;
 				}
+
+			case N.BackAction:
+				{
+					switch(GM.Instance.GameState)
+					{
+						case GameState.Play:
+							{
+								GoToState (ContextType.SelectLevelContext);
+								break;
+							}
+					}
+					break;
+				}
 		}
 	}
 		

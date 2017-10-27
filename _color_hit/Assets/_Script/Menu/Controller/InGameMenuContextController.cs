@@ -42,4 +42,10 @@ public class InGameMenuContextController : Controller
 
 		Notify (N.RetryLevel);
 	}
+
+	public void ClickBack()
+	{
+		_inGameContext.GoToState (InGameMenuState.None);
+		Notify (N.BackAction);
+	}
 }

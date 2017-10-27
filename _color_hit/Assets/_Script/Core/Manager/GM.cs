@@ -118,6 +118,19 @@ public class GM : Controller
 
 					break;
 				}
+
+			case N.BackAction:
+				{
+					switch(GameState)
+					{
+						case GameState.Play:
+							{
+								GoToState (GameState.MainMenu);
+								break;
+							}
+					}
+					break;
+				}
 		}
 
 	}

@@ -120,6 +120,89 @@ public class MainMenuContextController : Controller
 		InitStyleItems ();
 	}
 		
+	public void OnClickStyleItem(StyleId styleId)
+	{
+		Debug.LogFormat ("OnClick styleid: {0}", styleId);
+
+		if (GM.Instance.CurrentStyleId != styleId)
+		{
+			Sequence selectStyleSequence = DOTween.Sequence ();
+			ItemStyleContextData selectItemData = null;
+			ItemStyleContextData currentItemData = null;
+			int selectItemIndex = -1;
+			int currentItemIndex = -1;
+			int i = 0;
+
+			for (i = 0; i <MainMenuContext.ItemsStyle.Count; i++)
+			{
+				ItemStyleContextData itemData = MainMenuContext.ItemsStyle [i];
+
+				if (itemData.IsSelected)
+				{
+					currentItemData = itemData;
+					currentItemIndex = i;
+					continue;
+				}
+
+				if (itemData.StyleId == styleId)
+				{
+					selectItemData = itemData;
+					selectItemIndex = i;
+					continue;
+				}
+			}
+
+			bool isRightOffset = currentItemIndex < selectItemIndex;
+			List<ItemStyleContextData> itemsOffsetList = new List<ItemStyleContextData> ();
+
+			int offsetCount = isRightOffset ? selectItemIndex - currentItemIndex : currentItemIndex - selectItemIndex;
+
+			for (i = 0; i < offsetCount; i++)
+			{
+				itemsOffsetList.Add(MainMenuContext.ItemsStyle[(isRightOffset ? currentItemIndex : selectItemIndex) + i + 1]);
+			}
+
+			int moveItemsCount = itemsOffsetList.Count;
+
+			selectStyleSequence
+				.Append (DOTween.To(()=>currentItemData.ItemScale, (valVector)=>currentItemData.ItemScale=valVector, ItemStyleContextData.STYLE_ITEM_INIT_SCALE, 0.3f))
+				.Append(DOTween.To(()=>selectItemData.ItemPosition, (valVector)=>selectItemData.ItemPosition = valVector, new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f), 0.3f))
+				.Join(DOTween.To(()=>currentItemData.ItemPosition, (valVector)=>currentItemData.ItemPosition = valVector, isRightOffset ? itemsOffsetList[0].ItemPosition : MainMenuContext.ItemsStyle[currentItemIndex - 1].ItemPosition, 0.3f))
+				;
+
+
+			if (isRightOffset)
+				itemsOffsetList.Reverse ();
+
+			for (i = 0; i < moveItemsCount; i++)
+			{
+				ItemStyleContextData itemData =itemsOffsetList [i];
+
+				if (itemData.Equals (currentItemData) || itemData.Equals (selectItemData))
+					continue;
+
+				selectStyleSequence
+					.Join (DOTween.To(()=>itemData.ItemPosition, (valVector)=> itemData.ItemPosition = valVector, isRightOffset ? MainMenuContext.ItemsStyle[selectItemIndex - i + 1].ItemPosition : MainMenuContext.ItemsStyle[selectItemIndex + i ].ItemPosition, 0.3f ));
+			}
+
+			selectStyleSequence.Join (DOTween.To(()=>selectItemData.ItemScale, (valVector)=>selectItemData.ItemScale=valVector, Vector3.one, 0.3f));
+
+			currentItemData.IsSelected = false;
+			selectItemData.IsSelected = true;
+
+			selectStyleSequence
+				.OnComplete(()=>
+				{
+					UpdateItemsLinePosition(false);
+
+				})
+				.SetId (_styleItemSelectTweenId)
+				.Play ();
+		}
+
+		Notify (N.SelectStyle_,NotifyType.ALL, styleId);
+	}
+
 
 	private void CreateStyleItemsPath()
 	{
@@ -203,90 +286,7 @@ public class MainMenuContextController : Controller
 
 		}
 	}
-
-	public void OnClickStyleItem(StyleId styleId)
-	{
-		Debug.LogFormat ("OnClick styleid: {0}", styleId);
-
-		if (GM.Instance.CurrentStyleId != styleId)
-		{
-			Sequence selectStyleSequence = DOTween.Sequence ();
-			ItemStyleContextData selectItemData = null;
-			ItemStyleContextData currentItemData = null;
-			int selectItemIndex = -1;
-			int currentItemIndex = -1;
-			int i = 0;
-
-			for (i = 0; i <MainMenuContext.ItemsStyle.Count; i++)
-			{
-				ItemStyleContextData itemData = MainMenuContext.ItemsStyle [i];
-
-				if (itemData.IsSelected)
-				{
-					currentItemData = itemData;
-					currentItemIndex = i;
-					continue;
-				}
-
-				if (itemData.StyleId == styleId)
-				{
-					selectItemData = itemData;
-					selectItemIndex = i;
-					continue;
-				}
-			}
-
-			bool isRightOffset = currentItemIndex < selectItemIndex;
-			List<ItemStyleContextData> itemsOffsetList = new List<ItemStyleContextData> ();
-
-			int offsetCount = isRightOffset ? selectItemIndex - currentItemIndex : currentItemIndex - selectItemIndex;
-
-			for (i = 0; i < offsetCount; i++)
-			{
-				itemsOffsetList.Add(MainMenuContext.ItemsStyle[(isRightOffset ? currentItemIndex : selectItemIndex) + i + 1]);
-			}
-
-			int moveItemsCount = itemsOffsetList.Count;
-
-			selectStyleSequence
-				.Append (DOTween.To(()=>currentItemData.ItemScale, (valVector)=>currentItemData.ItemScale=valVector, ItemStyleContextData.STYLE_ITEM_INIT_SCALE, 0.3f))
-				.Append(DOTween.To(()=>selectItemData.ItemPosition, (valVector)=>selectItemData.ItemPosition = valVector, new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0f), 0.3f))
-				.Join(DOTween.To(()=>currentItemData.ItemPosition, (valVector)=>currentItemData.ItemPosition = valVector, isRightOffset ? itemsOffsetList[0].ItemPosition : MainMenuContext.ItemsStyle[currentItemIndex - 1].ItemPosition, 0.3f))
-					;
-
-
-			if (isRightOffset)
-				itemsOffsetList.Reverse ();
-			
-			for (i = 0; i < moveItemsCount; i++)
-			{
-				ItemStyleContextData itemData =itemsOffsetList [i];
-
-				if (itemData.Equals (currentItemData) || itemData.Equals (selectItemData))
-					continue;
-			
-				selectStyleSequence
-					.Join (DOTween.To(()=>itemData.ItemPosition, (valVector)=> itemData.ItemPosition = valVector, isRightOffset ? MainMenuContext.ItemsStyle[selectItemIndex - i + 1].ItemPosition : MainMenuContext.ItemsStyle[selectItemIndex + i ].ItemPosition, 0.3f ));
-			}
-
-			selectStyleSequence.Join (DOTween.To(()=>selectItemData.ItemScale, (valVector)=>selectItemData.ItemScale=valVector, Vector3.one, 0.3f));
-				
-			currentItemData.IsSelected = false;
-			selectItemData.IsSelected = true;
-
-			selectStyleSequence
-				.OnComplete(()=>
-				{
-					UpdateItemsLinePosition(false);
-
-				})
-			.SetId (_styleItemSelectTweenId)
-			.Play ();
-		}
-			
-		Notify (N.SelectStyle_,NotifyType.ALL, styleId);
-	}
-
+		
 	void OnDestroy()
 	{
 		foreach (ItemStyleContextData itemData in MainMenuContext.ItemsStyle)

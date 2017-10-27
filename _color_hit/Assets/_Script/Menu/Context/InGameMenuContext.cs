@@ -5,6 +5,7 @@ using Slash.Unity.DataBind.Core.Data;
 
 public enum InGameMenuState
 {
+	None,
 	Game,
 	Pause
 }
@@ -47,6 +48,11 @@ public class InGameMenuContext : Context
 			case InGameMenuState.Pause:
 				{
 					IsShowPausePanel = true;
+					break;
+				}
+
+			case InGameMenuState.None:
+				{
 					break;
 				}
 		}

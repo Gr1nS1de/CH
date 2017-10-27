@@ -22,6 +22,19 @@ public class LevelController : Controller
 					break;
 				}
 
+			case N.BackAction:
+				{
+					switch (GM.Instance.GameState)
+					{
+						case GameState.Play:
+							{
+								DisableLevelSteps (game.view.GetCurrentLevelView ());
+								break;
+							}
+					}
+					break;
+				}
+
 		}
 	}
 
@@ -33,12 +46,17 @@ public class LevelController : Controller
 		{
 			styleView.LevelsList.ForEach(levelView=>
 			{
-				levelView.StepsList.ForEach(stepTransform=>
-				{
-					stepTransform.gameObject.SetActive(false);
-				});
+				DisableLevelSteps(levelView);
 			});
 		});
+	}
+
+	private void DisableLevelSteps(LevelView levelView)
+	{
+		levelView.StepsList.ForEach(stepTransform=>
+			{
+				stepTransform.gameObject.SetActive(false);
+			});
 	}
 
 	private void ActivateLevel(LevelView levelView, int step )

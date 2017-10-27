@@ -51,6 +51,7 @@ public class N : MonoBehaviour
 	#region Menu notifications
 	public const string SelectStyle_				= "select.style";
 	public const string SelectLevel__ 				= "select.level";
+	public const string BackAction					= "back.action";
 
 	public const string UIThemeChanged_				= "ui.theme.changed";
 	public const string UIWindowStateChanged_		= "ui.window.state.changed";

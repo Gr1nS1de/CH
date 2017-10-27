@@ -39,46 +39,7 @@ public class LineView : View
 
 	public void DrawPoint(Vector3 pos)
 	{
-		if (!_pointsList.Contains (pos))
-		{
-			pos.z = 0f;
-
-			_pointsList.Add (pos);
-
-			_lineRenderer.SetVertexCount (_pointsList.Count);
-
-			Vector3 addPoint;
-
-			if (_pointsList.Count >= 2)
-			{
-				addPoint = new Vector3 ((_pointsList [_pointsList.Count - 2].x + _pointsList [_pointsList.Count - 1].x) * _vertexSmooth,
-					(_pointsList [_pointsList.Count - 2].y + _pointsList [_pointsList.Count - 1].y) * _vertexSmooth,
-					(_pointsList [_pointsList.Count - 2].z + _pointsList [_pointsList.Count - 1].z) * _vertexSmooth);
-			}
-			else
-			{
-				addPoint = _pointsList [_pointsList.Count - 1];
-			}
-
-			_lineRenderer.SetPosition (_pointsList.Count - 1, addPoint);
-
-			// If collidable also set vertex positions
-			if(LineCollider != null)
-			{
-				_colliderList.Add(new Vector2(pos.x,pos.y));
-
-				Vector2[] colliderVertexPositions = new Vector2[_colliderList.Count];
-
-				for(int i = 0; i< _colliderList.Count ; i++)
-				{
-					colliderVertexPositions[i] = _colliderList[i];
-				}
-
-				if(colliderVertexPositions.Length >= 2)
-					LineCollider.points = colliderVertexPositions;
-			}
-
-		}
+		StartCoroutine (DrawPointRoutine(pos));
 	}
 
 	public void FinishDraw()
@@ -187,6 +148,52 @@ public class LineView : View
 	}
 		
 	#endregion
+
+	private IEnumerator DrawPointRoutine(Vector3 pos)
+	{
+		if (!_pointsList.Contains (pos))
+		{
+			pos.z = 0f;
+
+			_pointsList.Add (pos);
+
+			_lineRenderer.SetVertexCount (_pointsList.Count);
+
+			Vector3 addPoint;
+
+			if (_pointsList.Count >= 2)
+			{
+				addPoint = new Vector3 ((_pointsList [_pointsList.Count - 2].x + _pointsList [_pointsList.Count - 1].x) * _vertexSmooth,
+					(_pointsList [_pointsList.Count - 2].y + _pointsList [_pointsList.Count - 1].y) * _vertexSmooth,
+					(_pointsList [_pointsList.Count - 2].z + _pointsList [_pointsList.Count - 1].z) * _vertexSmooth);
+			}
+			else
+			{
+				addPoint = _pointsList [_pointsList.Count - 1];
+			}
+
+			_lineRenderer.SetPosition (_pointsList.Count - 1, addPoint);
+
+			yield return null;
+
+			// If collidable also set vertex positions
+			if(LineCollider != null)
+			{
+				_colliderList.Add(new Vector2(pos.x,pos.y));
+
+				Vector2[] colliderVertexPositions = new Vector2[_colliderList.Count];
+
+				for(int i = 0; i< _colliderList.Count ; i++)
+				{
+					colliderVertexPositions[i] = _colliderList[i];
+				}
+
+				if(colliderVertexPositions.Length >= 2)
+					LineCollider.points = colliderVertexPositions;
+			}
+
+		}
+	}
 
 	private void ContinueDuplicateLine()
 	{
