@@ -33,7 +33,7 @@ public class N : MonoBehaviour
 	public const string GameOver					= "game.over";
 	public const string GameAddScore				= "game.add.score";
 
-	public const string FinishDrawLine 				= "finish.draw.line";
+	public const string FinishDrawDuplicateLine 				= "finish.draw.line";
 	#region player notifications
 	/// <summary>
 	/// Any collision line with obstacle 

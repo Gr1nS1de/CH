@@ -10,11 +10,12 @@ public class LineView : View
 
 	private LineRenderer 	_lineRenderer { get { return game.view.GetCurrentLineRenderer (); } }
 	private List<Vector3> 	_pointsList { get { return _lineModel.pointsList; } }
+	private List<Vector3> 	_spiralPointsList = new List<Vector3> ();
 	private List<Vector2> 	_colliderList { get { return _lineModel.colliderList; } }
 	private float 			_vertexSmooth = 0.5f;
 	private int 			_lastIndex = -1;
 
-	private Tween 			_duplicateLineTween = null;
+	private IEnumerator 	_duplicateLineRoutine = null;
 	private Tween 			_collapseLineToStartTween = null;
 	private Tween 			_collapseLineToEndTween = null;
 	private Sequence 		_punchExpandLineSequence = null;
@@ -23,6 +24,23 @@ public class LineView : View
 	private LineModel 		_lineModel { get { return game.model.lineModel;}}
 
 	#region public methods
+	public void InitSpiral()
+	{
+		_spiralPointsList.Clear ();
+		ResetLine ();
+		/*
+		float circleSize = 0f;
+
+		for (int i = 0; i < 100; i++)
+		{
+			Vector3 addPoint = new Vector3 (Mathf.Sin (i) * circleSize / 50f, Mathf.Cos (i) * circleSize / 50f, 0f);
+
+			Debug.LogFormat ("Add point to spiral: {0}", addPoint);
+
+			_lineRenderer.SetPosition (i, addPoint);
+		}*/
+	}
+
 	public void StartDraw()
 	{
 		ResetLine ();
@@ -31,10 +49,14 @@ public class LineView : View
 
 	public void ResetLine()
 	{	
+		Debug.LogFormat ("ResetLine");
 		_lineRenderer.SetVertexCount(0);
 		LineCollider.enabled = false;
 		LineCollider.Reset ();
 		DOTween.Kill (_lineTweenId);
+
+		if(_duplicateLineRoutine != null)
+			StopCoroutine (_duplicateLineRoutine);
 	}
 
 	public void DrawPoint(Vector3 pos)
@@ -45,7 +67,9 @@ public class LineView : View
 	public void FinishDraw()
 	{
 		Debug.LogFormat("FinishDraw. line points count: {0}", _pointsList.Count);
-		ContinueDuplicateLine ();
+		_duplicateLineRoutine = ContinueDuplicateLine();
+
+		StartCoroutine( _duplicateLineRoutine);
 	}
 
 	public void PunchExpandLine()
@@ -74,7 +98,7 @@ public class LineView : View
 	{
 		Debug.LogFormat ("CollapseLineToStart. line points count: {0}", _pointsList.Count);
 
-		_duplicateLineTween.Kill ();
+		StopCoroutine(_duplicateLineRoutine);
 
 		_collapseLineToStartTween = 
 			DOTween.To (() => _lineRenderer.positionCount-1, pointIndex =>
@@ -95,7 +119,9 @@ public class LineView : View
 
 	public void CollapseLineToEnd()
 	{
-		_duplicateLineTween.Kill ();
+		Debug.LogFormat ("CollapseLineToEnd");
+
+		StopCoroutine(_duplicateLineRoutine);
 
 		_lastIndex = -1;
 		int linesPointsCount = _lineRenderer.positionCount - 1;
@@ -106,7 +132,7 @@ public class LineView : View
 				if(_lastIndex == -1 ||_lastIndex - pointIndex > 0)
 				{
 					Vector3[] linePositions = new Vector3[_lineRenderer.positionCount];	
-					_lineRenderer.GetPositions (linePositions);
+					_lineRenderer.GetPositions(linePositions);
 					var linePositionsList = linePositions.ToList();
 					int removeRange = _lastIndex == -1 ? 1 : _lastIndex - pointIndex;
 
@@ -122,6 +148,10 @@ public class LineView : View
 			.OnStart(()=>
 			{
 				LineCollider.enabled = false;
+			})
+			.OnKill(()=>
+			{
+					Debug.LogFormat("Kill collapse line to end");
 			})
 			.OnComplete(()=>
 			{
@@ -195,10 +225,10 @@ public class LineView : View
 		}
 	}
 
-	private void ContinueDuplicateLine()
+	private IEnumerator ContinueDuplicateLine()
 	{
 		if (_pointsList.Count < 2)
-			return;
+			yield break;
 		
 		var tempPointsList = _pointsList.ToList ();
 		Vector3 deltaLine = _pointsList[_pointsList.Count - 1] - _pointsList [0];
@@ -210,22 +240,20 @@ public class LineView : View
 			tempPointsList[i] = tempPointsList[i-1] + (_pointsList[i+1] - _pointsList[i]);
 		}
 
-		_duplicateLineTween = DOTween.To (()=>0,(pointIndex)=>
+		for (int i = 0; i < tempPointsList.Count; i++)
 		{
-			DrawPoint (tempPointsList[pointIndex]);
-		}, tempPointsList.Count - 1, _lineModel.lineDrawTimeLength)
-		.SetEase(Ease.Linear)
-		.SetId(_lineTweenId);
+			DrawPoint (tempPointsList[i]);
 
-		_duplicateLineTween
-			.OnComplete (() =>
+			if (i + 1 < tempPointsList.Count)
 			{
-				Notify (N.FinishDrawLine, NotifyType.GAME);
-			})
-			.OnKill (() =>
-			{
-					Debug.LogFormat("Killed duplicate tween");
-			});
+				i++;
+				DrawPoint (tempPointsList [i]);
+			}
+			
+			yield return null;
+		}
+			
+		Notify (N.FinishDrawDuplicateLine, NotifyType.GAME);
 	}
 
 }

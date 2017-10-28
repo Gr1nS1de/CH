@@ -37,11 +37,25 @@ public class MainContextController : Controller
 
 			case N.BackAction:
 				{
+					Debug.LogFormat ("BackAction. Current game state: {0}. current context: {1}", GM.Instance.GameState, CurrentState.ContextType);
 					switch(GM.Instance.GameState)
 					{
 						case GameState.Play:
 							{
 								GoToState (ContextType.SelectLevelContext);
+								break;
+							}
+
+						case GameState.MainMenu:
+							{
+								switch (CurrentState.ContextType)
+								{
+									case ContextType.SelectLevelContext:
+										{
+											GoToState (ContextType.MainMenuContext);
+											break;
+										}
+								}
 								break;
 							}
 					}

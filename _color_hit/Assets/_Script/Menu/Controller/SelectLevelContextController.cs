@@ -31,6 +31,12 @@ public class SelectLevelContextController : Controller
 		InitLevels ();
 	}
 
+	public void ClickBack()
+	{
+		Debug.LogFormat ("Select level click back");
+		Notify (N.BackAction);
+	}
+
 	private void InitLevels(StyleData styleData = null)
 	{
 		StyleData currentStyleData = core.styleModel.GetCurrentStyleData ();

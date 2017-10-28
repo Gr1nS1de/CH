@@ -43,10 +43,27 @@ public class GameController : Controller
 	private GameView 				_gameView	{ get { return game.view;}}
 	private PlayerData 		_playerDataModel	{ get { return core.playerData;}}
 
+	private bool _isWaitGameOver = false;
+	private Tween _gameOverDelayTween = null;
+
 	public override void OnNotification( string alias, Object target, params object[] data )
 	{
 		switch ( alias )
 		{
+
+			case N.DragInput____:
+				{
+					
+					if (_isWaitGameOver)
+					{
+						if (_gameOverDelayTween != null)
+							_gameOverDelayTween.Kill ();
+
+						Notify (N.GameOver);
+					}
+					break;
+				}
+
 			case N.CollisionObstacle___:
 				{
 					ObstacleModel.ObstacleCollisionType collisionType = (ObstacleModel.ObstacleCollisionType)data [0];
@@ -99,9 +116,9 @@ public class GameController : Controller
 					break;
 				}
 
-			case N.FinishDrawLine:
+			case N.FinishDrawDuplicateLine:
 				{
-					Debug.LogFormat ("Finish draw line: {0}", game.model.obstacleModel.isActivePointObstacle);
+					Debug.LogFormat ("Finish draw duplicate line: {0}", game.model.obstacleModel.isActivePointObstacle);
 					if (game.model.obstacleModel.isActivePointObstacle)
 					{
 						GameOver ();
@@ -126,13 +143,21 @@ public class GameController : Controller
 		
 	private void GameOver()
 	{
-		float delaySecs = 1f;
+		if (_gameOverDelayTween != null)
+			_gameOverDelayTween.Kill ();
+		
+		float delaySecs = game.model.lineModel.lineDrawTimeLength;
 		Debug.LogFormat ("GameOver. delay: {0}",delaySecs);
+		_isWaitGameOver = true;
 
-		DOVirtual.DelayedCall (delaySecs, () =>
+		_gameOverDelayTween = DOVirtual.DelayedCall (delaySecs, () =>
 		{
-
+			_isWaitGameOver = false;
 			Notify (N.GameOver);
+		})
+			.OnKill (() =>
+		{
+				_isWaitGameOver = false;
 		});
 
 	}

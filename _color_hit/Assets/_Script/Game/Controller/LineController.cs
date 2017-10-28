@@ -19,7 +19,7 @@ public class LineController : Controller
 					int step = (int)data [1];
 
 
-					_lineView.ResetLine ();
+					_lineView.InitSpiral ();
 					break;
 				}
 

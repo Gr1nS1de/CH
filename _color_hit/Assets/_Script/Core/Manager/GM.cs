@@ -57,6 +57,7 @@ public class GM : Controller
 
 	void Start()
 	{		
+		GameState = GameState.MainMenu;
 		SetStyle(CurrentStyleId, true);
 	}
 		
