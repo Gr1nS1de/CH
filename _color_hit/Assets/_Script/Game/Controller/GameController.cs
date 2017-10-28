@@ -53,8 +53,13 @@ public class GameController : Controller
 
 			case N.DragInput____:
 				{
-					
-					if (_isWaitGameOver)
+
+					GameObject selectedGameObject = (GameObject)data [0];
+					Vector3 currentPosition = (Vector3)data [1];
+					Vector2 deltaPosition = (Vector2)data [2];
+					ContinuousGesturePhase gesturePhase = (ContinuousGesturePhase) data[3];
+
+					if (_isWaitGameOver && gesturePhase == ContinuousGesturePhase.Started)
 					{
 						if (_gameOverDelayTween != null)
 							_gameOverDelayTween.Kill ();

@@ -98,7 +98,8 @@ public class LineView : View
 	{
 		Debug.LogFormat ("CollapseLineToStart. line points count: {0}", _pointsList.Count);
 
-		StopCoroutine(_duplicateLineRoutine);
+		if(_duplicateLineRoutine != null)
+			StopCoroutine(_duplicateLineRoutine);
 
 		_collapseLineToStartTween = 
 			DOTween.To (() => _lineRenderer.positionCount-1, pointIndex =>
