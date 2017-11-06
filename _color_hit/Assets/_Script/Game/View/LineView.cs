@@ -44,8 +44,6 @@ public class LineView : View
 		}
 
 		_lineRenderer = Utils.CopyComponent (currentLineRenderer, TLineRenderer.gameObject);
-		//if (currentLineRenderer.gameObject.activeSelf)
-		//	currentLineRenderer.gameObject.SetActive (false);
 
 		ResetLine ();
 	}
@@ -199,7 +197,29 @@ public class LineView : View
 
 			if (!_lineModel.isDrawInited)
 			{
-				_currentLineRenderer.transform.GetChild (_currentLineRenderer.transform.childCount - 1).DOMove (pos, 0.1f);
+				Sequence initLineSequence = DOTween.Sequence ();
+
+				initLineSequence
+					.Append(_currentLineRenderer.transform.GetChild (_currentLineRenderer.transform.childCount - 1).DOMove (pos, 0.1f).SetEase(Ease.Linear));
+
+				for (int i = 0; i < _currentLineRenderer.transform.childCount-1; i++)
+				{
+					initLineSequence
+						.Append (_currentLineRenderer.transform.GetChild (i).DOMove(_currentLineRenderer.transform.GetChild (i + 1).position, 0.02f).SetEase(Ease.Linear));
+
+					for (int a = 0; a < i; a++)
+					{
+						initLineSequence
+							.Join (_currentLineRenderer.transform.GetChild (a).DOMove(_currentLineRenderer.transform.GetChild (i + 1).position, 0.02f).SetEase(Ease.Linear));
+						
+					}
+				}
+
+				initLineSequence.OnComplete (() =>
+				{
+					if (_currentLineRenderer.gameObject.activeSelf)
+						_currentLineRenderer.gameObject.SetActive (false);
+				});
 			}
 
 			_pointsList.Add (pos);
