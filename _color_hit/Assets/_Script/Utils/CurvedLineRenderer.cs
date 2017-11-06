@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent( typeof(LineRenderer) )]
 public class CurvedLineRenderer : MonoBehaviour 
 {
 	//PUBLIC
@@ -60,6 +59,11 @@ public class CurvedLineRenderer : MonoBehaviour
 		if( moved == true )
 		{
 			LineRenderer line = this.GetComponent<LineRenderer>();
+
+			if (line == null)
+			{
+				return;
+			}
 
 			//get smoothed values
 			Vector3[] smoothedPoints = LineSmoother.SmoothLine( linePositions, lineSegmentSize );

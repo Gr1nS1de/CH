@@ -40,7 +40,10 @@ public class ObstaclesController : Controller
 					obstacleView.IsTriggered = true;
 
 					if (game.model.lineModel.isDraw)
-						return;
+					{
+						if(collisionType == ObstacleModel.ObstacleCollisionType.Die)
+							return;
+					}
 
 					Notify (N.ImpactObstacle___, NotifyType.GAME, collisionType, currentPosition, obstacleView);
 					break;

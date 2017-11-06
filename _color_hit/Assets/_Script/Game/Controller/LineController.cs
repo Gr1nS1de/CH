@@ -18,7 +18,7 @@ public class LineController : Controller
 					LevelView levelView =  (LevelView)data [0];
 					int step = (int)data [1];
 
-
+					_lineModel.InitLine ();
 					_lineView.InitSpiral ();
 					break;
 				}
@@ -51,7 +51,6 @@ public class LineController : Controller
 					{
 						case ContinuousGesturePhase.Started:
 							{
-								
 								_lineView.StartDraw();
 								_lineModel.StartDraw ();
 								break;
@@ -62,8 +61,11 @@ public class LineController : Controller
 								if (_blockLine)
 									return;
 								
-								if(deltaPosition.magnitude > 0f)
+								if (deltaPosition.magnitude > 0f)
+								{
 									_lineView.DrawPoint (currentPosition);
+									_lineModel.DrawPoint ();
+								}
 								break;
 							}
 
@@ -90,24 +92,36 @@ public class LineController : Controller
 					Vector3 currentPosition = (Vector3)data [1];
 					ObstacleView obstacleView = (ObstacleView)data [2];
 
-					if (_lineModel.isDraw)
-					{
-						_blockLine = true;
-						_lineView.CollapseLineToStart ();
-						return;
-					}
 
 					switch (collisionType)
 					{
 						case ObstacleModel.ObstacleCollisionType.Die:
 							{
-								_lineView.CollapseLineToEnd ();
+								if (_lineModel.isDraw)
+								{
+									_blockLine = true;
+									_lineView.CollapseLineToStart ();
+									return;
+								}
+								else
+								{
+									_lineView.CollapseLineToEnd ();
+								}
 								break;
 							}
 
 						case ObstacleModel.ObstacleCollisionType.Point:
 							{
-								_lineView.PunchExpandLine ();
+								if (_lineModel.isDraw)
+								{
+									_blockLine = true;
+
+									_lineView.FinishDraw ();
+								}
+								else
+								{
+									_lineView.PunchExpandLine ();
+								}
 								break;
 							}
 					}

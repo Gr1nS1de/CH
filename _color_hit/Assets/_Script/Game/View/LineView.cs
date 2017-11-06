@@ -6,14 +6,16 @@ using DG.Tweening;
 
 public class LineView : View
 {
+	public Transform TLineRenderer; //{ get { return game.view.GetCurrentLineRenderer (); } }
 	public EdgeCollider2D LineCollider;
 
-	private LineRenderer 	_lineRenderer { get { return game.view.GetCurrentLineRenderer (); } }
 	private List<Vector3> 	_pointsList { get { return _lineModel.pointsList; } }
 	private List<Vector3> 	_spiralPointsList = new List<Vector3> ();
 	private List<Vector2> 	_colliderList { get { return _lineModel.colliderList; } }
 	private float 			_vertexSmooth = 0.5f;
 	private int 			_lastIndex = -1;
+	private LineRenderer	_lineRenderer; 
+	private LineRenderer	_currentLineRenderer;
 
 	private IEnumerator 	_duplicateLineRoutine = null;
 	private Tween 			_collapseLineToStartTween = null;
@@ -24,21 +26,28 @@ public class LineView : View
 	private LineModel 		_lineModel { get { return game.model.lineModel;}}
 
 	#region public methods
+	/// <summary>
+	/// Called on start level
+	/// </summary>
 	public void InitSpiral()
 	{
+		LineRenderer currentLineRenderer = game.view.GetCurrentLineRenderer ();
+
+		_currentLineRenderer = currentLineRenderer;
+
 		_spiralPointsList.Clear ();
-		ResetLine ();
-		/*
-		float circleSize = 0f;
 
-		for (int i = 0; i < 100; i++)
+		if (TLineRenderer.GetComponent<LineRenderer>())
 		{
-			Vector3 addPoint = new Vector3 (Mathf.Sin (i) * circleSize / 50f, Mathf.Cos (i) * circleSize / 50f, 0f);
+			DestroyImmediate (TLineRenderer.GetComponent<LineRenderer>());
+			_lineRenderer = null;
+		}
 
-			Debug.LogFormat ("Add point to spiral: {0}", addPoint);
+		_lineRenderer = Utils.CopyComponent (currentLineRenderer, TLineRenderer.gameObject);
+		//if (currentLineRenderer.gameObject.activeSelf)
+		//	currentLineRenderer.gameObject.SetActive (false);
 
-			_lineRenderer.SetPosition (i, addPoint);
-		}*/
+		ResetLine ();
 	}
 
 	public void StartDraw()
@@ -50,9 +59,11 @@ public class LineView : View
 	public void ResetLine()
 	{	
 		Debug.LogFormat ("ResetLine");
+
 		_lineRenderer.SetVertexCount(0);
+
 		LineCollider.enabled = false;
-		LineCollider.Reset ();
+		LineCollider.Reset();
 		DOTween.Kill (_lineTweenId);
 
 		if(_duplicateLineRoutine != null)
@@ -185,6 +196,11 @@ public class LineView : View
 		if (!_pointsList.Contains (pos))
 		{
 			pos.z = 0f;
+
+			if (!_lineModel.isDrawInited)
+			{
+				_currentLineRenderer.transform.GetChild (_currentLineRenderer.transform.childCount - 1).DOMove (pos, 0.1f);
+			}
 
 			_pointsList.Add (pos);
 

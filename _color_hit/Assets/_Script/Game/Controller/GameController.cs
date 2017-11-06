@@ -130,12 +130,7 @@ public class GameController : Controller
 					}
 					break;
 				}
-
-			case N.RetryLevel:
-				{
-					GameOver ();
-					break;
-				}
+					
 					
 		}
 	}

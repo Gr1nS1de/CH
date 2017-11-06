@@ -132,6 +132,16 @@ public class GM : Controller
 					}
 					break;
 				}
+
+			case N.RetryLevel:
+				{
+					GoToState (GameState.Play);
+
+
+
+					Notify (N.StartLevel__, NotifyType.ALL, game.model.levelModel.CurrentLevel, game.model.levelModel.CurrentStep);
+					break;
+				}
 		}
 
 	}

@@ -5,16 +5,32 @@ using System.Collections.Generic;
 public class LineModel : Model
 {
 
-	public List<Vector3> 	pointsList			= new List<Vector3>();
-	public List<Vector2> 	colliderList		= new List<Vector2>();
-	public bool 			isDraw 				{ get; private set;}
-	public int				pointCount			{ get { return pointsList.Count; } }
-	public float			lineDrawTimeLength 	{ get { return Mathf.Clamp( pointCount * 0.033f,  0f, 1f);}}
+	public List<Vector3> 	pointsList				= new List<Vector3>();
+	public List<Vector2> 	colliderList			= new List<Vector2>();
+	public bool 			isDraw 					{ get; private set;}
+	public int				pointCount				{ get { return pointsList.Count; } }
+	public float			lineDrawTimeLength 		{ get { return Mathf.Clamp( pointCount * 0.033f,  0f, 1f);}}
+	public float			spiralInitAnimationTime = 0.2f;
+	public bool				isDrawInited 			{ get; private set; }
+
+	public void InitLine()
+	{
+		isDrawInited = false;
+	}
 
 	public void StartDraw()
 	{
 		ClearLinePoints ();
+
 		isDraw = true;
+	}
+
+	public void DrawPoint()
+	{
+		if (!isDrawInited)
+		{
+			isDrawInited = true;
+		}
 	}
 
 	public void FinishDraw()
