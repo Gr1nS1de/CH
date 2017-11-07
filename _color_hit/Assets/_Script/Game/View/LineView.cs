@@ -18,6 +18,7 @@ public class LineView : View
 	private LineRenderer	_currentLineRenderer;
 
 	private IEnumerator 	_duplicateLineRoutine = null;
+	private IEnumerator 	_drawPointRoutine = null;
 	private Tween 			_collapseLineToStartTween = null;
 	private Tween 			_collapseLineToEndTween = null;
 	private Sequence 		_punchExpandLineSequence = null;
@@ -29,9 +30,9 @@ public class LineView : View
 	/// <summary>
 	/// Called on start level
 	/// </summary>
-	public void InitSpiral()
+	public void InitSpiral(LineRenderer currentLineRenderer)
 	{
-		LineRenderer currentLineRenderer = game.view.GetCurrentLineRenderer ();
+		Debug.LogFormat ("Current line renderer: {0}. parent: {1}", currentLineRenderer.transform.parent.name, currentLineRenderer.transform.parent.parent.name);
 
 		_currentLineRenderer = currentLineRenderer;
 
@@ -66,11 +67,18 @@ public class LineView : View
 
 		if(_duplicateLineRoutine != null)
 			StopCoroutine (_duplicateLineRoutine);
+
+		if(_drawPointRoutine != null)
+			StopCoroutine (_drawPointRoutine);
+
+		StopAllCoroutines ();
 	}
 
 	public void DrawPoint(Vector3 pos)
 	{
-		StartCoroutine (DrawPointRoutine(pos));
+		_drawPointRoutine = DrawPointRoutine (pos);
+
+		StartCoroutine (_drawPointRoutine);
 	}
 
 	public void FinishDraw()
@@ -199,10 +207,8 @@ public class LineView : View
 			{
 				Sequence initLineSequence = DOTween.Sequence ();
 
-				initLineSequence
-					.Append(_currentLineRenderer.transform.GetChild (_currentLineRenderer.transform.childCount - 1).DOMove (pos, 0.1f).SetEase(Ease.Linear));
 
-				for (int i = 0; i < _currentLineRenderer.transform.childCount-1; i++)
+				for (int i = 0; i < _currentLineRenderer.transform.childCount-2; i++)
 				{
 					initLineSequence
 						.Append (_currentLineRenderer.transform.GetChild (i).DOMove(_currentLineRenderer.transform.GetChild (i + 1).position, 0.02f).SetEase(Ease.Linear));
@@ -215,6 +221,19 @@ public class LineView : View
 					}
 				}
 
+				initLineSequence
+					.Append (_currentLineRenderer.transform.GetChild (_currentLineRenderer.transform.childCount - 2).DOMove(pos, 0.02f).SetEase(Ease.Linear));
+
+				for (int a = 0; a < _currentLineRenderer.transform.childCount - 2; a++)
+				{
+					initLineSequence
+						.Join (_currentLineRenderer.transform.GetChild (a).DOMove(pos, 0.02f).SetEase(Ease.Linear));
+
+				}
+
+				initLineSequence
+					.Insert(0f, _currentLineRenderer.transform.GetChild (_currentLineRenderer.transform.childCount - 1).DOMove (pos, 0.5f).SetEase(Ease.Linear));
+				
 				initLineSequence.OnComplete (() =>
 				{
 					if (_currentLineRenderer.gameObject.activeSelf)

@@ -17,9 +17,10 @@ public class LineController : Controller
 				{
 					LevelView levelView =  (LevelView)data [0];
 					int step = (int)data [1];
+					LineRenderer currentLineRenderer = levelView.StepsList [step].GetComponentInChildren<LineRenderer> (true);
 
 					_lineModel.InitLine ();
-					_lineView.InitSpiral ();
+					_lineView.InitSpiral (currentLineRenderer);
 					break;
 				}
 
