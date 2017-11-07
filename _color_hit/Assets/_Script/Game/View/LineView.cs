@@ -23,6 +23,7 @@ public class LineView : View
 	private Tween 			_collapseLineToEndTween = null;
 	private Sequence 		_punchExpandLineSequence = null;
 	private	string			_lineTweenId = "line.tween.id";
+	private bool			_isFinishedDuplicate = false;
 
 	private LineModel 		_lineModel { get { return game.model.lineModel;}}
 
@@ -45,8 +46,6 @@ public class LineView : View
 		}
 
 		_lineRenderer = Utils.CopyComponent (currentLineRenderer, TLineRenderer.gameObject);
-
-		ResetLine ();
 	}
 
 	public void StartDraw()
@@ -63,7 +62,10 @@ public class LineView : View
 
 		LineCollider.enabled = false;
 		LineCollider.Reset();
+
 		DOTween.Kill (_lineTweenId);
+
+		_isFinishedDuplicate = false;
 
 		if(_duplicateLineRoutine != null)
 			StopCoroutine (_duplicateLineRoutine);
@@ -203,7 +205,7 @@ public class LineView : View
 		{
 			pos.z = 0f;
 
-			if (!_lineModel.isDrawInited)
+			if (!_lineModel.isFirstDrawInited)
 			{
 				Sequence initLineSequence = DOTween.Sequence ();
 
@@ -309,7 +311,11 @@ public class LineView : View
 			yield return null;
 		}
 			
-		Notify (N.FinishDrawDuplicateLine, NotifyType.GAME);
+		if (!_isFinishedDuplicate)
+		{
+			_isFinishedDuplicate = true;
+			Notify (N.FinishDrawDuplicateLine, NotifyType.GAME);
+		}
 	}
 
 }

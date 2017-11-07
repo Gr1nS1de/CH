@@ -11,25 +11,24 @@ public class LineModel : Model
 	public int				pointCount				{ get { return pointsList.Count; } }
 	public float			lineDrawTimeLength 		{ get { return Mathf.Clamp( pointCount * 0.033f,  0f, 1f);}}
 	public float			spiralInitAnimationTime = 0.2f;
-	public bool				isDrawInited 			{ get; private set; }
+	public bool				isFirstDrawInited 		{ get; private set; }
 
 	public void InitLine()
 	{
-		isDrawInited = false;
+		isFirstDrawInited = false;
 	}
 
 	public void StartDraw()
 	{
 		ClearLinePoints ();
-
 		isDraw = true;
 	}
 
 	public void DrawPoint()
 	{
-		if (!isDrawInited)
+		if (!isFirstDrawInited)
 		{
-			isDrawInited = true;
+			isFirstDrawInited = true;
 		}
 	}
 

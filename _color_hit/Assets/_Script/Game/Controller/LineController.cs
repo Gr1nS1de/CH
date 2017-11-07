@@ -8,6 +8,7 @@ public class LineController : Controller
 	private LineView 	_lineView	{ get { return game.view.lineView;}	}
 
 	private bool _blockLine = false;
+	private bool _isStartedDraw	= false;
 
 	public override void OnNotification (string alias, Object target, params object[] data)
 	{
@@ -21,18 +22,20 @@ public class LineController : Controller
 
 					_lineModel.InitLine ();
 					_lineView.InitSpiral (currentLineRenderer);
+
+					ResetLine();
 					break;
 				}
 
 			case N.FinishStep_:
 				{
-					_lineView.ResetLine ();
+					ResetLine();
 					break;
 				}
 
 			case N.GameOver:
 				{
-					_lineView.ResetLine ();
+					ResetLine();
 					break;
 				}
 
@@ -52,8 +55,7 @@ public class LineController : Controller
 					{
 						case ContinuousGesturePhase.Started:
 							{
-								_lineView.StartDraw();
-								_lineModel.StartDraw ();
+								StartDraw();
 								break;
 							}
 
@@ -64,6 +66,11 @@ public class LineController : Controller
 								
 								if (deltaPosition.magnitude > 0f)
 								{
+									if (!_isStartedDraw)
+									{
+										StartDraw();
+									}
+
 									_lineView.DrawPoint (currentPosition);
 									_lineModel.DrawPoint ();
 								}
@@ -76,7 +83,6 @@ public class LineController : Controller
 
 								if (_blockLine)
 								{
-									_blockLine = false;
 									return;
 								}
 
@@ -113,7 +119,7 @@ public class LineController : Controller
 
 						case ObstacleModel.ObstacleCollisionType.Point:
 							{
-								if (_lineModel.isDraw)
+								if (_lineModel.isDraw && !_blockLine)
 								{
 									_blockLine = true;
 
@@ -132,4 +138,17 @@ public class LineController : Controller
 		}
 	}
 		
+	private void ResetLine()
+	{
+		_blockLine = false;
+		_isStartedDraw = false;
+		_lineView.ResetLine ();
+	}
+
+	private void StartDraw()
+	{
+		_isStartedDraw = true;
+		_lineView.StartDraw();
+		_lineModel.StartDraw ();
+	}
 }
