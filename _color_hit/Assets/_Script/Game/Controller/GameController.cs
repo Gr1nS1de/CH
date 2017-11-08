@@ -45,6 +45,7 @@ public class GameController : Controller
 
 	private bool _isWaitGameOver = false;
 	private Tween _gameOverDelayTween = null;
+	private Sequence _finishStepSequence = null;
 
 	public override void OnNotification( string alias, Object target, params object[] data )
 	{
@@ -103,17 +104,20 @@ public class GameController : Controller
 						case ObstacleModel.ObstacleCollisionType.Point:
 							{
 								Debug.LogFormat ("IsActive obstacle: {0}", game.model.obstacleModel.isActivePointObstacle);
-								if (!game.model.obstacleModel.isActivePointObstacle)
+								if (!game.model.obstacleModel.isActivePointObstacle && (_finishStepSequence == null || _finishStepSequence != null && !_finishStepSequence.IsPlaying()))
 								{
 									int currentStep = game.model.levelModel.CurrentStep;
 
 									game.model.levelModel.CurrentStep = game.model.levelModel.CurrentStep + 1 >= core.styleModel.GetCurrentStyleData ().stepsCount ? 0 : game.model.levelModel.CurrentStep + 1;
+									_finishStepSequence = DOTween.Sequence ();
 
-									DOVirtual.DelayedCall(1f, ()=>
-									{
-										Debug.LogFormat("Notify finish step");
-										Notify (N.FinishStep_, NotifyType.GAME, currentStep);
-									});
+									_finishStepSequence
+										.AppendInterval(1f)
+										.OnComplete(()=>
+										{
+											Debug.LogFormat("Notify finish step");
+											Notify (N.FinishStep_, NotifyType.GAME, currentStep);
+										});
 								}
 								break;
 							}

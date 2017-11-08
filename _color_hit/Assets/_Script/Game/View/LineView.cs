@@ -24,6 +24,7 @@ public class LineView : View
 	private Sequence 		_punchExpandLineSequence = null;
 	private	string			_lineTweenId = "line.tween.id";
 	private bool			_isFinishedDuplicate = false;
+	private bool			_isFinishedInitLine = false;
 
 	private LineModel 		_lineModel { get { return game.model.lineModel;}}
 
@@ -234,7 +235,7 @@ public class LineView : View
 				}
 
 				initLineSequence
-					.Insert(0f, _currentLineRenderer.transform.GetChild (_currentLineRenderer.transform.childCount - 1).DOMove (pos, 0.5f).SetEase(Ease.Linear));
+					.Insert(0f, _currentLineRenderer.transform.GetChild (_currentLineRenderer.transform.childCount - 1).DOMove (pos, 0.2f).SetEase(Ease.Linear));
 				
 				initLineSequence.OnComplete (() =>
 				{
