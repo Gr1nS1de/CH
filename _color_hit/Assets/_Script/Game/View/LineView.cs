@@ -92,6 +92,30 @@ public class LineView : View
 		Debug.LogFormat("FinishDraw. line points count: {0}", _pointsList.Count);
 		_duplicateLineRoutine = ContinueDuplicateLine();
 
+		if (_isFinishedInitLine)
+		{
+			_initLineSequence.Kill ();
+
+			_initLineSequence = DOTween.Sequence ();
+
+			_initLineSequence
+				.Append (_currentLineRenderer.transform.GetChild (_currentLineRenderer.transform.childCount - 2).DOMove (_pointsList[0], 0.1f).SetEase (Ease.Linear));
+
+			for (int a = 0; a < _currentLineRenderer.transform.childCount - 2; a++)
+			{
+				_initLineSequence
+					.Join (_currentLineRenderer.transform.GetChild (a).DOMove (_pointsList[0], 0.1f).SetEase (Ease.Linear));
+			}
+
+			_initLineSequence.OnComplete (() =>
+			{
+				if (_currentLineRenderer.gameObject.activeSelf)
+					_currentLineRenderer.gameObject.SetActive (false);
+			});
+
+			_isFinishedInitLine = false;
+		}
+
 		StartCoroutine( _duplicateLineRoutine);
 	}
 
@@ -209,6 +233,8 @@ public class LineView : View
 		{
 			pos.z = 0f;
 
+			_pointsList.Add (pos);
+
 			if (!_lineModel.isFirstDrawInited || _isFinishedInitLine)
 			{
 				_isFinishedInitLine = true;
@@ -218,9 +244,12 @@ public class LineView : View
 
 				_initLineSequence = DOTween.Sequence ();
 
-				if(_lineModel.isFirstDrawInited)
+				if (!_lineModel.isFirstDrawInited)
+				{
+					_currentLineRenderer.transform.GetChild (_currentLineRenderer.transform.childCount - 1).DOMove (pos, 0.2f).SetEase(Ease.Linear);
+				}
 
-				for (int i = 0; i < _currentLineRenderer.transform.childCount-2; i++)
+				for (int i = 0; i < _pointsList.Count; i++)
 				{
 					_initLineSequence
 						.Append (_currentLineRenderer.transform.GetChild (i).DOMove(_currentLineRenderer.transform.GetChild (i + 1).position, 0.02f).SetEase(Ease.Linear));
@@ -233,24 +262,26 @@ public class LineView : View
 					}
 				}
 
-				_initLineSequence
-					.Append (_currentLineRenderer.transform.GetChild (_currentLineRenderer.transform.childCount - 2).DOMove(pos, 0.02f).SetEase(Ease.Linear));
-
-				for (int a = 0; a < _currentLineRenderer.transform.childCount - 2; a++)
+				if (_pointsList.Count >= _currentLineRenderer.transform.childCount - 2)
 				{
 					_initLineSequence
-						.Join (_currentLineRenderer.transform.GetChild (a).DOMove(pos, 0.02f).SetEase(Ease.Linear));
+						.Append (_currentLineRenderer.transform.GetChild (_currentLineRenderer.transform.childCount - 2).DOMove (pos, 0.05f).SetEase (Ease.Linear));
 
+					for (int a = 0; a < _currentLineRenderer.transform.childCount - 2; a++)
+					{
+						_initLineSequence
+						.Join (_currentLineRenderer.transform.GetChild (a).DOMove (pos, 0.05f).SetEase (Ease.Linear));
+					}
+
+					_initLineSequence.OnComplete (() =>
+					{
+						if (_currentLineRenderer.gameObject.activeSelf)
+							_currentLineRenderer.gameObject.SetActive (false);
+					});
+
+					_isFinishedInitLine = false;
 				}
-					
-				_initLineSequence.OnComplete (() =>
-				{
-					if (_currentLineRenderer.gameObject.activeSelf)
-						_currentLineRenderer.gameObject.SetActive (false);
-				});
 			}
-
-			_pointsList.Add (pos);
 
 			_lineRenderer.SetVertexCount (_pointsList.Count);
 
