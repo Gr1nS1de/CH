@@ -25,6 +25,7 @@ public class LineView : View
 	private	string			_lineTweenId = "line.tween.id";
 	private bool			_isFinishedDuplicate = false;
 	private bool			_isFinishedInitLine = false;
+	private Sequence 		_initLineSequence = null;
 
 	private LineModel 		_lineModel { get { return game.model.lineModel;}}
 
@@ -47,6 +48,8 @@ public class LineView : View
 		}
 
 		_lineRenderer = Utils.CopyComponent (currentLineRenderer, TLineRenderer.gameObject);
+
+		_isFinishedInitLine = false;
 	}
 
 	public void StartDraw()
@@ -206,38 +209,41 @@ public class LineView : View
 		{
 			pos.z = 0f;
 
-			if (!_lineModel.isFirstDrawInited)
+			if (!_lineModel.isFirstDrawInited || _isFinishedInitLine)
 			{
-				Sequence initLineSequence = DOTween.Sequence ();
+				_isFinishedInitLine = true;
 
+				if (_initLineSequence != null && _initLineSequence.IsActive ())
+					_initLineSequence.Kill ();
+
+				_initLineSequence = DOTween.Sequence ();
+
+				if(_lineModel.isFirstDrawInited)
 
 				for (int i = 0; i < _currentLineRenderer.transform.childCount-2; i++)
 				{
-					initLineSequence
+					_initLineSequence
 						.Append (_currentLineRenderer.transform.GetChild (i).DOMove(_currentLineRenderer.transform.GetChild (i + 1).position, 0.02f).SetEase(Ease.Linear));
 
 					for (int a = 0; a < i; a++)
 					{
-						initLineSequence
+						_initLineSequence
 							.Join (_currentLineRenderer.transform.GetChild (a).DOMove(_currentLineRenderer.transform.GetChild (i + 1).position, 0.02f).SetEase(Ease.Linear));
 						
 					}
 				}
 
-				initLineSequence
+				_initLineSequence
 					.Append (_currentLineRenderer.transform.GetChild (_currentLineRenderer.transform.childCount - 2).DOMove(pos, 0.02f).SetEase(Ease.Linear));
 
 				for (int a = 0; a < _currentLineRenderer.transform.childCount - 2; a++)
 				{
-					initLineSequence
+					_initLineSequence
 						.Join (_currentLineRenderer.transform.GetChild (a).DOMove(pos, 0.02f).SetEase(Ease.Linear));
 
 				}
-
-				initLineSequence
-					.Insert(0f, _currentLineRenderer.transform.GetChild (_currentLineRenderer.transform.childCount - 1).DOMove (pos, 0.2f).SetEase(Ease.Linear));
-				
-				initLineSequence.OnComplete (() =>
+					
+				_initLineSequence.OnComplete (() =>
 				{
 					if (_currentLineRenderer.gameObject.activeSelf)
 						_currentLineRenderer.gameObject.SetActive (false);
