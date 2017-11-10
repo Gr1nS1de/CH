@@ -26,6 +26,7 @@ public class LineView : View
 	private bool			_isFinishedDuplicate = false;
 	private bool			_isFinishedInitLine = false;
 	private Sequence 		_initLineSequence = null;
+	private int				_pointsCount = 0;
 
 	private LineModel 		_lineModel { get { return game.model.lineModel;}}
 
@@ -80,9 +81,9 @@ public class LineView : View
 		StopAllCoroutines ();
 	}
 
-	public void DrawPoint(Vector3 pos)
+	public void DrawPoint(Vector3 pos, bool isClampLine = false)
 	{
-		_drawPointRoutine = DrawPointRoutine (pos);
+		_drawPointRoutine = DrawPointRoutine (pos, isClampLine);
 
 		StartCoroutine (_drawPointRoutine);
 	}
@@ -227,7 +228,7 @@ public class LineView : View
 		
 	#endregion
 
-	private IEnumerator DrawPointRoutine(Vector3 pos)
+	private IEnumerator DrawPointRoutine(Vector3 pos, bool isClampLine)
 	{
 		if (!_pointsList.Contains (pos))
 		{
@@ -283,6 +284,10 @@ public class LineView : View
 				}
 			}
 
+			if (isClampLine && _pointsList.Count > 0)
+				_pointsList.RemoveAt (0);
+
+			//_lineRenderer.SetVertexCount (isClampLine ? _pointsCount : _pointsList.Count);
 			_lineRenderer.SetVertexCount (_pointsList.Count);
 
 			Vector3 addPoint;
@@ -298,7 +303,8 @@ public class LineView : View
 				addPoint = _pointsList [_pointsList.Count - 1];
 			}
 
-			_lineRenderer.SetPosition (_pointsList.Count - 1, addPoint);
+			//_lineRenderer.SetPosition ((isClampLine ? _pointsCount - 1 : _pointsList.Count - 1), addPoint);
+			_lineRenderer.SetPositions (_pointsList.ToArray());
 
 			yield return null;
 
@@ -336,14 +342,16 @@ public class LineView : View
 			tempPointsList[i] = tempPointsList[i-1] + (_pointsList[i+1] - _pointsList[i]);
 		}
 
+		_pointsCount = _pointsList.Count;
+
 		for (int i = 0; i < tempPointsList.Count; i++)
 		{
-			DrawPoint (tempPointsList[i]);
+			DrawPoint (tempPointsList[i], true);
 
 			if (i + 1 < tempPointsList.Count)
 			{
 				i++;
-				DrawPoint (tempPointsList [i]);
+				DrawPoint (tempPointsList [i], true);
 			}
 			
 			yield return null;
