@@ -103,7 +103,8 @@ public class GameController : Controller
 					{
 						case ObstacleModel.ObstacleCollisionType.Point:
 							{
-								Debug.LogFormat ("IsActive obstacle: {0}", game.model.obstacleModel.isActivePointObstacle);
+								Debug.LogFormat ("IsActive point obstacle: {0}", game.model.obstacleModel.isActivePointObstacle);
+
 								if (!game.model.obstacleModel.isActivePointObstacle && (_finishStepSequence == null || _finishStepSequence != null && !_finishStepSequence.IsPlaying()))
 								{
 									int currentStep = game.model.levelModel.CurrentStep;
@@ -127,7 +128,8 @@ public class GameController : Controller
 
 			case N.FinishDrawDuplicateLine:
 				{
-					Debug.LogFormat ("Finish draw duplicate line: {0}", game.model.obstacleModel.isActivePointObstacle);
+					Debug.LogFormat ("Finish draw duplicate line. isActivePoint: {0}", game.model.obstacleModel.isActivePointObstacle);
+
 					if (game.model.obstacleModel.isActivePointObstacle)
 					{
 						GameOver ();
@@ -147,11 +149,18 @@ public class GameController : Controller
 		
 	private void GameOver()
 	{
+		Debug.LogFormat ("GameOver. _isWaitGameOver: {0}",_isWaitGameOver);
+
+		if (_isWaitGameOver)
+			return;
+		
 		if (_gameOverDelayTween != null)
 			_gameOverDelayTween.Kill ();
 		
 		float delaySecs = game.model.lineModel.lineDrawTimeLength;
+
 		Debug.LogFormat ("GameOver. delay: {0}",delaySecs);
+
 		_isWaitGameOver = true;
 
 		_gameOverDelayTween = DOVirtual.DelayedCall (delaySecs, () =>

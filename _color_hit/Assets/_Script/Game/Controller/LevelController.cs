@@ -28,7 +28,7 @@ public class LevelController : Controller
 					{
 						case GameState.Play:
 							{
-								DisableLevelSteps (game.view.GetCurrentLevelView ());
+								DisableSteps (game.view.GetCurrentLevelView ());
 								break;
 							}
 					}
@@ -46,12 +46,12 @@ public class LevelController : Controller
 		{
 			styleView.LevelsList.ForEach(levelView=>
 			{
-				DisableLevelSteps(levelView);
+				DisableSteps(levelView);
 			});
 		});
 	}
 
-	private void DisableLevelSteps(LevelView levelView)
+	private void DisableSteps(LevelView levelView)
 	{
 		levelView.StepsList.ForEach(stepTransform=>
 			{

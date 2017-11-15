@@ -92,7 +92,7 @@ public class LineView : View
 	{
 		Debug.LogFormat("FinishDraw. line points count: {0}", _pointsList.Count);
 		_duplicateLineRoutine = ContinueDuplicateLine();
-
+		/*
 		if (_isFinishedInitLine)
 		{
 			_initLineSequence.Kill ();
@@ -116,7 +116,7 @@ public class LineView : View
 
 			_isFinishedInitLine = false;
 		}
-
+*/
 		StartCoroutine( _duplicateLineRoutine);
 	}
 
@@ -235,7 +235,7 @@ public class LineView : View
 			pos.z = 0f;
 
 			_pointsList.Add (pos);
-
+			/*
 			if (!_lineModel.isFirstDrawInited || _isFinishedInitLine)
 			{
 				_isFinishedInitLine = true;
@@ -282,7 +282,7 @@ public class LineView : View
 
 					_isFinishedInitLine = false;
 				}
-			}
+			}*/
 
 			if (isClampLine && _pointsList.Count > 0)
 				_pointsList.RemoveAt (0);

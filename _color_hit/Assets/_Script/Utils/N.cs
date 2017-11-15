@@ -8,6 +8,9 @@ public class N : MonoBehaviour
 	public const string OnDoubleTapInput			= "on.double.tap.input";
 	public const string SetStyle__					= "set.style";
 	public const string StartLevel__ 				= "start.level";
+	/// <summary>
+	/// Calls on finish step properly
+	/// </summary>
 	public const string FinishStep_ 					= "finish.step";
 	public const string RetryLevel 					= "retry.level";
 
@@ -30,6 +33,9 @@ public class N : MonoBehaviour
 	public const string GameStart					= "game.start";
 	public const string GamePause					= "game.pause";
 	public const string GameContinue				= "game.continue";
+	/// <summary>
+	/// Calls on game over via die obstacle
+	/// </summary>
 	public const string GameOver					= "game.over";
 	public const string GameAddScore				= "game.add.score";
 

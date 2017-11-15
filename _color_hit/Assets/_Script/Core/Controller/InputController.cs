@@ -4,8 +4,21 @@ using System.Collections.Generic;
 
 public class InputController : Controller
 {
-	//List<Touch> TouchesList = new List<Touch> ();
-	//Touch[] _inputTouches = Input.touches;
+	public override void OnNotification (string alias, Object target, params object[] data)
+	{
+		switch (alias)
+		{
+			case N.GameOver:
+				{
+					break;
+				}
+
+			case N.FinishStep_:
+				{
+					break;
+				}
+		}
+	}
 
 	public void OnDrag(DragGesture e)
 	{
