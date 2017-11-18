@@ -61,7 +61,7 @@ public class GameModel : Model
 	private ObstacleModel		_obstacleModel;
 	private LineModel			_lineModel;
 
-
+	public bool isWaitChangeStep;
 	//public RocketModel					rocketModel				{ get { return _rocketModel					= SearchLocal<RocketModel>(					_rocketModel,				typeof(RocketModel).Name );}}
 
 	//private RocketModel			_rocketModel;

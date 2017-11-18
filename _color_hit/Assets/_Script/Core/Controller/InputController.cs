@@ -22,7 +22,10 @@ public class InputController : Controller
 
 	public void OnDrag(DragGesture e)
 	{
-		Notify (N.DragInput____, NotifyType.ALL, e.StartSelection, Camera.main.ScreenToWorldPoint(e.Position), e.DeltaMove, e.Phase);
+		if (!game.model.isWaitChangeStep)
+		{
+			Notify (N.DragInput____, NotifyType.ALL, e.StartSelection, Camera.main.ScreenToWorldPoint (e.Position), e.DeltaMove, e.Phase);
+		}
 	}
 
 	/*

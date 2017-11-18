@@ -43,7 +43,7 @@ public class GameController : Controller
 	private GameView 				_gameView	{ get { return game.view;}}
 	private PlayerData 		_playerDataModel	{ get { return core.playerData;}}
 
-	private bool _isWaitGameOver = false;
+	private bool _isWaitChangeStep {get { return game.model.isWaitChangeStep;} set { game.model.isWaitChangeStep = value; }}
 	private Tween _gameOverDelayTween = null;
 	private Sequence _finishStepSequence = null;
 
@@ -51,6 +51,12 @@ public class GameController : Controller
 	{
 		switch ( alias )
 		{
+
+			case N.StartLevel__:
+				{
+					_gameModel.isWaitChangeStep = false;
+					break;
+				}
 
 			case N.DragInput____:
 				{
@@ -60,7 +66,7 @@ public class GameController : Controller
 					Vector2 deltaPosition = (Vector2)data [2];
 					ContinuousGesturePhase gesturePhase = (ContinuousGesturePhase) data[3];
 
-					if (_isWaitGameOver && gesturePhase == ContinuousGesturePhase.Started)
+					if (_isWaitChangeStep && gesturePhase == ContinuousGesturePhase.Started)
 					{
 						if (_gameOverDelayTween != null)
 							_gameOverDelayTween.Kill ();
@@ -111,11 +117,13 @@ public class GameController : Controller
 
 									game.model.levelModel.CurrentStep = game.model.levelModel.CurrentStep + 1 >= core.styleModel.GetCurrentStyleData ().stepsCount ? 0 : game.model.levelModel.CurrentStep + 1;
 									_finishStepSequence = DOTween.Sequence ();
+									_isWaitChangeStep = true;
 
 									_finishStepSequence
 										.AppendInterval(1f)
 										.OnComplete(()=>
 										{
+											_isWaitChangeStep = false;
 											Debug.LogFormat("Notify finish step");
 											Notify (N.FinishStep_, NotifyType.GAME, currentStep);
 										});
@@ -149,9 +157,9 @@ public class GameController : Controller
 		
 	private void GameOver()
 	{
-		Debug.LogFormat ("GameOver. _isWaitGameOver: {0}",_isWaitGameOver);
+		Debug.LogFormat ("GameOver. _isWaitGameOver: {0}",_isWaitChangeStep);
 
-		if (_isWaitGameOver)
+		if (_isWaitChangeStep)
 			return;
 		
 		if (_gameOverDelayTween != null)
@@ -161,16 +169,16 @@ public class GameController : Controller
 
 		Debug.LogFormat ("GameOver. delay: {0}",delaySecs);
 
-		_isWaitGameOver = true;
+		_isWaitChangeStep = true;
 
 		_gameOverDelayTween = DOVirtual.DelayedCall (delaySecs, () =>
 		{
-			_isWaitGameOver = false;
+			_isWaitChangeStep = false;
 			Notify (N.GameOver);
 		})
 			.OnKill (() =>
 		{
-				_isWaitGameOver = false;
+				_isWaitChangeStep = false;
 		});
 
 	}

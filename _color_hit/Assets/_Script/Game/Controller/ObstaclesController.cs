@@ -51,13 +51,38 @@ public class ObstaclesController : Controller
 
 			case N.GameOver:
 				{
+					ResetObstacles ();
+					break;
+				}
 
-					game.view.GetCurrentStyleView().transform.parent.gameObject.SetActive(false);
-					game.view.GetCurrentStyleView().transform.parent.gameObject.SetActive(true);
+			case N.DragInput____:
+				{
+					GameObject selectedGameObject = (GameObject)data [0];
+					Vector3 currentPosition = (Vector3)data [1];
+					Vector2 deltaPosition = (Vector2)data [2];
+					ContinuousGesturePhase gesturePhase = (ContinuousGesturePhase) data[3];
+
+					switch (gesturePhase)
+					{
+						case ContinuousGesturePhase.Started:
+							{
+								Debug.LogFormat ("Drag start. isWaitChangeStep: {0}", game.model.isWaitChangeStep);
+
+								ResetObstacles ();
+
+								break;
+							}
+					}
 					break;
 				}
 
 		}
+	}
+
+	private void ResetObstacles()
+	{
+		game.view.GetCurrentStyleView().transform.parent.gameObject.SetActive(false);
+		game.view.GetCurrentStyleView().transform.parent.gameObject.SetActive(true);
 	}
 
 }
