@@ -22,17 +22,27 @@ public enum StyleId
 	HeroChoose
 }
 
-[CreateAssetMenu(fileName = "StylesSettings", menuName = "Styles/List", order = 1)]
-public class StylesSettings : ScriptableObject 
-{
-	public List<StyleData> StylesDataList;
-}
-
-
 [ExecuteInEditMode]
 public class StyleModel : Model
 {
-	public StylesSettings StylesSettings;
+	public StylesSettings StylesSettings
+	{
+		get
+		{
+			
+			if (_styleSettings == null)
+			{
+				_styleSettings = (StylesSettings)Resources.Load("StylesSettings", typeof(StylesSettings));
+
+				if (!_styleSettings)
+					Debug.LogErrorFormat ("Error: _styleSettings == null!");
+			}
+
+			return _styleSettings;
+		}
+	}
+
+	private StylesSettings _styleSettings = null;
 
 	void Start()
 	{
