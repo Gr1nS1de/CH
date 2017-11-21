@@ -15,7 +15,6 @@ public class LineView : View
 	private float 			_vertexSmooth = 0.5f;
 	private int 			_lastIndex = -1;
 	private LineRenderer	_lineRenderer; 
-	private LineRenderer	_currentLineRenderer;
 
 	private IEnumerator 	_duplicateLineRoutine = null;
 	private IEnumerator 	_drawPointRoutine = null;
@@ -34,11 +33,9 @@ public class LineView : View
 	/// <summary>
 	/// Called on start level
 	/// </summary>
-	public void InitSpiral(LineRenderer currentLineRenderer)
+	public void Init(LineRenderer currentLineRenderer)
 	{
 		Debug.LogFormat ("Current line renderer: {0}. parent: {1}", currentLineRenderer.transform.parent.name, currentLineRenderer.transform.parent.parent.name);
-
-		_currentLineRenderer = currentLineRenderer;
 
 		_spiralPointsList.Clear ();
 
@@ -48,7 +45,7 @@ public class LineView : View
 			_lineRenderer = null;
 		}
 
-		_lineRenderer = Utils.CopyComponent (currentLineRenderer, TLineRenderer.gameObject);
+		_lineRenderer = currentLineRenderer;
 
 		_isFinishedInitLine = false;
 	}

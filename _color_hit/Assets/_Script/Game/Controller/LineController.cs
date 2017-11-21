@@ -21,7 +21,7 @@ public class LineController : Controller
 					LineRenderer currentLineRenderer = levelView.StepsList [step].GetComponentInChildren<LineRenderer> (true);
 
 					_lineModel.InitLine ();
-					_lineView.InitSpiral (currentLineRenderer);
+					_lineView.Init (currentLineRenderer);
 
 					ResetLine();
 					break;
