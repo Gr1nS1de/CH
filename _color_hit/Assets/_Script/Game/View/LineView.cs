@@ -6,11 +6,10 @@ using DG.Tweening;
 
 public class LineView : View
 {
-	public Transform TLineRenderer; //{ get { return game.view.GetCurrentLineRenderer (); } }
 	public EdgeCollider2D LineCollider;
 
 	private List<Vector3> 	_pointsList { get { return _lineModel.pointsList; } }
-	private List<Vector3> 	_spiralPointsList = new List<Vector3> ();
+	//private List<Vector3> 	_spiralPointsList = new List<Vector3> ();
 	private List<Vector2> 	_colliderList { get { return _lineModel.colliderList; } }
 	private float 			_vertexSmooth = 0.5f;
 	private int 			_lastIndex = -1;
@@ -37,13 +36,8 @@ public class LineView : View
 	{
 		Debug.LogFormat ("Current line renderer: {0}. parent: {1}", currentLineRenderer.transform.parent.name, currentLineRenderer.transform.parent.parent.name);
 
-		_spiralPointsList.Clear ();
+		//_spiralPointsList.Clear ();
 
-		if (TLineRenderer.GetComponent<LineRenderer>())
-		{
-			DestroyImmediate (TLineRenderer.GetComponent<LineRenderer>());
-			_lineRenderer = null;
-		}
 
 		_lineRenderer = currentLineRenderer;
 
@@ -330,28 +324,34 @@ public class LineView : View
 			yield break;
 		
 		var tempPointsList = _pointsList.ToList ();
-		Vector3 deltaLine = _pointsList[_pointsList.Count - 1] - _pointsList [0];
+		List<Vector3> nextPointsList = _pointsList.ToList ();
+		//Vector3 deltaLine = nextPointsList[nextPointsList.Count - 1] - nextPointsList [0];
 
-		tempPointsList[0] = _pointsList[_pointsList.Count - 1] + (_pointsList[1] - _pointsList[0]);
-
-		for (int i = 1; i < tempPointsList.Count-1; i++)
+		for (int a = 0; a < 5; a++)
 		{
-			tempPointsList[i] = tempPointsList[i-1] + (_pointsList[i+1] - _pointsList[i]);
-		}
+			tempPointsList [0] = nextPointsList [nextPointsList.Count - 1];//+ (nextPointsList[1] - nextPointsList[0]);
 
-		_pointsCount = _pointsList.Count;
-
-		for (int i = 0; i < tempPointsList.Count; i++)
-		{
-			DrawPoint (tempPointsList[i], true);
-
-			if (i + 1 < tempPointsList.Count)
+			for (int i = 0; i < tempPointsList.Count - 1; i++)
 			{
-				i++;
-				DrawPoint (tempPointsList [i], true);
+				tempPointsList [i + 1] = tempPointsList [i] + (nextPointsList [i + 1] - nextPointsList [i]);
 			}
+
+			_pointsCount = _pointsList.Count;
+
+			for (int i = 0; i < tempPointsList.Count; i++)
+			{
+				DrawPoint (tempPointsList [i], true);
+
+				if (i + 1 < tempPointsList.Count)
+				{
+					i++;
+					DrawPoint (tempPointsList [i], true);
+				}
 			
-			yield return null;
+				yield return null;
+			}
+
+			nextPointsList = new List<Vector3>(tempPointsList);
 		}
 			
 		if (!_isFinishedDuplicate)

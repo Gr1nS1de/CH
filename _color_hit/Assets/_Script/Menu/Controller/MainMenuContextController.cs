@@ -215,13 +215,13 @@ public class MainMenuContextController : Controller
 		List<Vector3> wayPoints = new List<Vector3> ()
 		{
 			new Vector3(0f, halfY, 0f), 
-			screenCenter + new Vector3(Mathf.Sin(-0.75f),Mathf.Cos(-0.75f), 0f) * radiusLength, 
-			screenCenter + new Vector3(Mathf.Sin(-0.5f),Mathf.Cos(-0.5f), 0f) * radiusLength, 
-			screenCenter + new Vector3(Mathf.Sin(-0.25f),Mathf.Cos(-0.25f), 0f) * radiusLength, 
-			screenCenter + new Vector3(Mathf.Sin(0f), Mathf.Cos(0f), 0f) * radiusLength, 
-			screenCenter + new Vector3(Mathf.Sin(0.25f), Mathf.Cos(0.25f), 0f) * radiusLength, 
-			screenCenter + new Vector3(Mathf.Sin(0.5f), Mathf.Cos(0.5f), 0f )*radiusLength, 
-			screenCenter + new Vector3(Mathf.Sin(0.75f), Mathf.Cos(0.75f), 0f )*radiusLength, 
+			screenCenter + new Vector3(Mathf.Sin(-0.75f),-Mathf.Cos(-0.75f), 0f) * radiusLength, 
+			screenCenter + new Vector3(Mathf.Sin(-0.5f),-Mathf.Cos(-0.5f), 0f) * radiusLength, 
+			screenCenter + new Vector3(Mathf.Sin(-0.25f),-Mathf.Cos(-0.25f), 0f) * radiusLength, 
+			screenCenter + new Vector3(Mathf.Sin(0f), -Mathf.Cos(0f), 0f) * radiusLength, 
+			screenCenter + new Vector3(Mathf.Sin(0.25f), -Mathf.Cos(0.25f), 0f) * radiusLength, 
+			screenCenter + new Vector3(Mathf.Sin(0.5f), -Mathf.Cos(0.5f), 0f )*radiusLength, 
+			screenCenter + new Vector3(Mathf.Sin(0.75f), -Mathf.Cos(0.75f), 0f )*radiusLength, 
 			new Vector3(Screen.width, halfY, 0f), 
 			new Vector3(Screen.width, halfY, 0f) + new Vector3(ITEM_STYLE_RADIUS*StyleContextHoldersList.Count*2f, 0f, 0f)
 		};

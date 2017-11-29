@@ -38,10 +38,19 @@ public class ObstacleOrangeWhiteView : ObstacleView
 				case ObstacleModel.WhiteOrangeObstacleType.Point:
 					{
 						_collisionSequence
-							.Append(MainRenderer.DOScale(Vector3.zero, 0.3f))
-							.SetAutoKill(false)
-							.SetRecyclable(true)
+							.Append (MainRenderer.DOScale (Vector3.one * 3f, 0.3f));
+
+						foreach (SpriteRenderer render in MainRenderer.GetComponentsInChildren<SpriteRenderer> ())
+						{
+							_collisionSequence
+								.Join (render.DOFade (0f, 0.3f));
+						}
+
+						_collisionSequence
+							.SetAutoKill (false)
+							.SetRecyclable (true)
 							.Pause();
+
 						break;
 					}
 
