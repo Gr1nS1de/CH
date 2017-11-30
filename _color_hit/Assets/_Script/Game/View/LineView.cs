@@ -108,7 +108,10 @@ public class LineView : View
 			_isFinishedInitLine = false;
 		}
 */
-		StartCoroutine( _duplicateLineRoutine);
+		DOVirtual.DelayedCall (0.1f, () =>
+		{
+			StartCoroutine (_duplicateLineRoutine);
+		});
 	}
 
 	public void PunchExpandLine()
@@ -342,12 +345,13 @@ public class LineView : View
 			{
 				DrawPoint (tempPointsList [i], true);
 
+				/*
 				if (i + 1 < tempPointsList.Count)
 				{
 					i++;
 					DrawPoint (tempPointsList [i], true);
 				}
-			
+			*/
 				yield return null;
 			}
 

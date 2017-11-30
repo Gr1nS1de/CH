@@ -38,7 +38,7 @@ public class ObstacleOrangeWhiteView : ObstacleView
 				case ObstacleModel.WhiteOrangeObstacleType.Point:
 					{
 						_collisionSequence
-							.Append (MainRenderer.DOScale (Vector3.one * 3f, 0.3f));
+							.Append (MainRenderer.DOScale (Vector3.one * 2f, 0.3f).SetEase(Ease.InBounce));
 
 						foreach (SpriteRenderer render in MainRenderer.GetComponentsInChildren<SpriteRenderer> ())
 						{
