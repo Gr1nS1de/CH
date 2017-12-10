@@ -39,7 +39,7 @@ public class ObstaclesController : Controller
 					
 					obstacleView.IsTriggered = true;
 
-					if (game.model.lineModel.isDraw)
+					if (game.model.lineModel.isDrawing)
 					{
 						if(collisionType == ObstacleModel.ObstacleCollisionType.Die)
 							return;

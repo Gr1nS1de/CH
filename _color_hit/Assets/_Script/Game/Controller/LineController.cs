@@ -7,9 +7,6 @@ public class LineController : Controller
 	private LineModel 	_lineModel	{ get { return game.model.lineModel;}	}
 	private LineView 	_lineView	{ get { return game.view.lineView;}	}
 
-	private bool _blockLine = false;
-	private bool _isStartedDraw	= false;
-
 	public override void OnNotification (string alias, Object target, params object[] data)
 	{
 		switch (alias)
@@ -20,10 +17,16 @@ public class LineController : Controller
 					int step = (int)data [1];
 					LineRenderer currentLineRenderer = levelView.StepsList [step].GetComponentInChildren<LineRenderer> (true);
 
-					_lineModel.InitLine ();
 					_lineView.Init (currentLineRenderer);
 
 					ResetLine();
+					break;
+				}
+
+			case N.RetryLevel:
+				{
+					ResetLine();
+					
 					break;
 				}
 
@@ -61,14 +64,14 @@ public class LineController : Controller
 
 						case ContinuousGesturePhase.Updated:
 							{
-								if (_blockLine)
+								if (_lineModel.currentState == LineState.Finished)
 									return;
 								
 								if (deltaPosition.magnitude > 0f)
 								{
-									if (!_isStartedDraw)
+									if (_lineModel.currentState == LineState.Init)
 									{
-										StartDraw();
+										StartDraw ();
 									}
 
 									_lineView.DrawPoint (currentPosition);
@@ -80,12 +83,6 @@ public class LineController : Controller
 						case ContinuousGesturePhase.Ended:
 							{
 								_lineModel.FinishDraw ();
-
-								if (_blockLine)
-								{
-									return;
-								}
-
 								_lineView.FinishDraw ();
 								break;
 							}
@@ -99,16 +96,13 @@ public class LineController : Controller
 					Vector3 currentPosition = (Vector3)data [1];
 					ObstacleView obstacleView = (ObstacleView)data [2];
 
-
 					switch (collisionType)
 					{
 						case ObstacleModel.ObstacleCollisionType.Die:
 							{
-								if (_lineModel.isDraw)
+								if (_lineModel.isDrawing)
 								{
-									_blockLine = true;
 									_lineView.CollapseLineToStart ();
-									return;
 								}
 								else
 								{
@@ -119,10 +113,9 @@ public class LineController : Controller
 
 						case ObstacleModel.ObstacleCollisionType.Point:
 							{
-								if (_lineModel.isDraw && !_blockLine)
+								if (_lineModel.isDrawing)
 								{
-									_blockLine = true;
-
+									_lineModel.FinishDraw ();
 									_lineView.FinishDraw ();
 								}
 								else
@@ -140,14 +133,12 @@ public class LineController : Controller
 		
 	private void ResetLine()
 	{
-		_blockLine = false;
-		_isStartedDraw = false;
+		_lineModel.InitLine ();
 		_lineView.ResetLine ();
 	}
 
 	private void StartDraw()
 	{
-		_isStartedDraw = true;
 		_lineView.StartDraw();
 		_lineModel.StartDraw ();
 	}
